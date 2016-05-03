@@ -35,7 +35,7 @@ $dnsexist = "false"
 
 $VDCName = "VDC2"
 $coreRG = $VDCName+"core"
-$networkRG = $VDC1Name+"network"
+$networkRG = $VDCName+"network"
 $location = "East US"
 $deployURL = "https://raw.githubusercontent.com/tzghardy/project1/master/"
 
@@ -61,11 +61,15 @@ $parameterscsr = $deployURL+"cisco-csr-1000v/azuredeploy.parameters.json"
 <# storagetype allowed values
 "Standard_LRS","Standard_LRSZRS","Standard_LRSGRS","Standard_RAGRS","Premium_LRS"
 #>
-
 $storagetype_core = "Standard_LRS"
 $storagetype_network = "Standard_LRS"
+$subnetNameFrontEndFixed = "FEFixed"
+$subnetNameFrontEndDynamic = "FEDynamic"
+$subnetNameBackEndFixed = "BEFixed"
+$subnetNameBackEndDynamic = "BEDynamic"
+$subnetNameSECFixed = "SECFixed"
 $parametersavset = @{"AvailabilitySetName"="adAvailabilitySet"}
-
+$parametersNSG = @{"VDCName"=$VDCName;"subnetFEfixedName"=$subnetNameFrontEndFixed;"subnetFEdynamicName"=$subnetNameFrontEndDynamic;"subnetBEfixedName"=$subnetNameBackEndFixed;"subnetBEdynamicName"=$subnetNameBackEndDynamic;"subnetSECfixedName"=$subnetNameSECFixed}
 
 
 #date
@@ -89,13 +93,13 @@ New-AzureRmResourceGroup -Name $networkRG -Location $location
 <#
     create StorageAccount in resource group output is storageNameOutput = storageaccountname...
     this could be used later to push deployments together#>
-$storageAccountNameNetwork=$netowrkRG+$storageType_network.Substring(0,1)+$storageType_network.Split('_')[1]
+$storageAccountNameNetwork=$networkRG+$storageType_network.Substring(0,1)+$storageType_network.Split('_')[1]
 $storageAccountNameNetwork=$storageAccountNameNetwork.toLower()
 New-AzureRmResourceGroupDeployment -Name "Network_Storage_Account"-ResourceGroupName $networkRG -TemplateURI $deploystorage -storageType $storageType_network -storageAccountName $storageAccountNameNetwork
 
 #date
 <#create NSG for VDC1, there are no actual rules in this template besides letting it build defualts#>
-#New-AzureRmResourceGroupDeployment -Name "NetSecGroup_Deploy"-ResourceGroupName $networkRG -TemplateURI $deploynsg -TemplateParameterURI $parametersnsg
+New-AzureRmResourceGroupDeployment -Name "NetSecGroup_Deploy"-ResourceGroupName $networkRG -TemplateURI $deploynsg -TemplateParameterObject $parametersNSG
 
 <#create UDR for VDC1, this needs to be moved to post virtual appliance install when it gets built, new vnet deploy script will be required though it is already mostly built#>
 <#not_working (no Virt Appliance) New-AzureRmResourceGroupDeployment -ResourceGroupName "rgVDC1network" -TemplateURI "./UserDefRoute/azuredeploy.json" -TemplateParameterURI "./UserDefRoute/azuredeploy.parameters.json"

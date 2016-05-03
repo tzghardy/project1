@@ -33,11 +33,11 @@
     "variables": {
         "rgName": "[resourceGroup().name]",
         "location": "[resourceGroup().location]",
-        "vnetSubnetFEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetFEfixedName')))]",
-        "vnetSubnetFEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetFEdynamicName')))]",
-        "vnetSubnetBEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEfixedName')))]",
-        "vnetSubnetBEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEdynamicName')))]",
-        "vnetSubnetSECfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetSECfixedName')))]",
+        "vnetSubnetFEfixedNSGName": "[toLower('NSG',parameters('subnetFEfixedName')))]",
+        "vnetSubnetFEdynamicNSGName": "[toLower('NSG',parameters('subnetFEdynamicName')))]",
+        "vnetSubnetBEfixedNSGName": "[toLower('NSG',parameters('subnetBEfixedName')))]",
+        "vnetSubnetBEdynamicNSGName": "[toLower('NSG',parameters('subnetBEdynamicName')))]",
+        "vnetSubnetSECfixedNSGName": "[toLower('NSG',parameters('subnetSECfixedName')))]",
 
     },
     "resources": [
