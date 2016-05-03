@@ -21,9 +21,13 @@
     "variables": {
         "rgName": "[resourceGroup().name]",
         "location": "[resourceGroup().location]",
-        "storageString": "[split(parameters('storageType'),'_')]",
-        "storageSuffix": "[variables('storageString(0)')]",
-        "storageAccountName": "[toLower(concat(variables('rgName'),variables('storageSuffix'))]",
+        "Standard_LRS": "slrs",
+        "Standard_ZRS": "szrs",
+        "Standard_GRS": "sgrs",
+        "Standard_RAGRS": "sragrs",
+        "Premium_LRS": "plrs",
+        "storageSuffix": "[variables(parameters('storageType'))]",
+        "storageAccountName": "[toLower(concat(variables('rgName'),variables('storageSuffix')))]",
     },
     "resources": [
         {
