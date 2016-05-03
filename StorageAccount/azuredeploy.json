@@ -49,7 +49,7 @@
     "outputs":{
       "storageNameOutput": {
         "type": "string",
-        "value": "[variables('storageAccountName')]"
+        "value": "[parameters('storageAccountName')]"
       }
     }
 }
