@@ -13,6 +13,12 @@
               "Premium_LRS"
             ]
         },
+        "storageAccountName": {
+          "type": "string",
+          "metadata": {
+            "description": "StorageAccountName"
+          }
+        },
         "storageNameOutput": {
           "type": "string",
           "defaultValue": ""
@@ -21,17 +27,10 @@
     "variables": {
         "rgName": "[resourceGroup().name]",
         "location": "[resourceGroup().location]",
-        "Standard_LRS": "slrs",
-        "Standard_ZRS": "szrs",
-        "Standard_GRS": "sgrs",
-        "Standard_RAGRS": "sragrs",
-        "Premium_LRS": "plrs",
-        "storageSuffix": "[variables(parameters('storageType'))]",
-        "storageAccountName": "[toLower(concat(variables('rgName'),variables('storageSuffix')))]",
     },
     "resources": [
         {
-            "name": "[variables('storageAccountName')]",
+            "name": "[parameters('storageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[variables('location')]",
             "apiVersion": "2015-06-15",
