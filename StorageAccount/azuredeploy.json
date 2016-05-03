@@ -22,7 +22,7 @@
         "rgName": "[resourceGroup().name]",
         "location": "[resourceGroup().location]",
         "storageString": "[split(parameters('storageType'),'_')]",
-        "storagesuffix": "[concat(substring(variables('storageString(0)',0,1)),variables('storageString(1)'))]",
+        "storagesuffix": "[concat(substring(variables('storageString(0)'),0,1),variables('storageString(1)'))]",
         "storageAccountName": "[toLower(concat(variables('rgName'),variables('storageSuffix'))]",
     },
     "resources": [
