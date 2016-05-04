@@ -17,7 +17,7 @@
        "subnetDefinition": {
          "type": "array",
          "metadata": {
-           "description": "definition of the subnets in the virtual network"
+           "description": "subnet definition object"
          }
        }
     },
