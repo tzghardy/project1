@@ -29,18 +29,12 @@
       }
     },
     "variables": {
-        "vnetSubnetFEfixedNSGName": "[toLower('NSG',parameters('subnetFEfixedName')))]",
-        "vnetSubnetFEdynamicNSGName": "[toLower('NSG',parameters('subnetFEdynamicName')))]",
-        "vnetSubnetBEfixedNSGName": "[toLower('NSG',parameters('subnetBEfixedName')))]",
-        "vnetSubnetBEdynamicNSGName": "[toLower('NSG',parameters('subnetBEdynamicName')))]",
-        "vnetSubnetSECfixedNSGName": "[toLower('NSG',parameters('subnetSECfixedName')))]",
-
     },
     "resources": [
         {
           "apiVersion": "2015-05-01-preview",
           "type": "Microsoft.Network/networkSecurityGroups",
-          "name": "[concat('nsg',parameters('subnetDefinition')[copyIndex()].subnetName)]",
+          "name": "[toLower(concat('nsg',parameters('subnetDefinition')[copyIndex()].subnetName))]",
           "location": "[variables('location')]",
           "copy": {
             "name": "NSGRulesCopy",
