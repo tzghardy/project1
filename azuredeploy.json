@@ -40,7 +40,7 @@
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
-    "VNETSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
+    "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
     "apiVersion": "2015-01-01",
   },
