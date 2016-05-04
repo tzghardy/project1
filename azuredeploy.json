@@ -40,13 +40,15 @@
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
+    "VNETSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
+    "apiVersion": "2015-05-01-preview",
   },
   "resources": [
     {
       "name": "SettingUPNetworkSecurityGroups",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "[variables('apiVersion')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -65,11 +67,34 @@
           }
         }
       }
-    }
+    },
+    {
+      "name": "SettingUPVirtualNetwork",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+            "uri": "[variables('VNETSetupURI')]",
+            "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "vnetDefinition": {
+            "value": "[parameters('vnetDefinition')]"
+          },
+          "subnetDefinition": {
+            "value": "[parameters('subnetDefinition')]"
+          }
+        }
+      }
+    },
   ],
   "outputs": {
     "outputvalues": {
-      "type": "string",
+      "type": "int",
       "value": "[parameters('vnetDefinition')[2]]"
     }
   }

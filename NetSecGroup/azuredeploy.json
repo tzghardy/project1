@@ -2,13 +2,6 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "VDCName": {
-         "type": "string",
-         "metadata": {
-           "description": "used to build NSG names, the nsg build method is used in other deployments"
-         },
-         "defaultValue": "VDCNoName",
-      },
       "location": {
         "type": "string",
         "metadata": {
@@ -29,10 +22,11 @@
       }
     },
     "variables": {
+      "apiVersion": "2015-05-01-preview",
     },
     "resources": [
         {
-          "apiVersion": "2015-05-01-preview",
+          "apiVersion": "[variables('apiVersion')]",
           "type": "Microsoft.Network/networkSecurityGroups",
           "name": "[toLower(concat('nsg',parameters('subnetDefinition')[copyIndex()].subnetName))]",
           "location": "[parameters('location')]",
