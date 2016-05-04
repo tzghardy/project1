@@ -30,6 +30,10 @@
         "type": "Microsoft.Network/virtualNetworks",
         "location": "[parameters('location')]",
         "apiVersion": "[variables('apiVersion')]",
+        "copy": {
+          "name": "SubnetCreate",
+          "count": "[parameters('vnetDefinition')[2]]"
+        },
         "dependsOn": [],
         "tags": {
             "displayName": "VDC Virtual Network",
@@ -44,10 +48,6 @@
           "subnets": [
             {
               "name": "[toLower(parameters('subnetDefinition')[copyIndex()].subnetName)]",
-              "copy": {
-                "name": "SubnetCreate",
-                "count": "[parameters('vnetDefinition')[2]]"
-              },
               "properties": {
                 "addressPrefix": "[parameters('subnetDefinition')[copyIndex()].addressPrefix]",
                 "networkSecurityGroup": {
