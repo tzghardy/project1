@@ -37,7 +37,7 @@
                 "displayName": "[variables('storageAccountName')]",
                 "type": "storage",
                 "resourceGroup": "[variables('rgName')]",
-                "storagetype": "[parameters('storageType')]"
+                "storagetype": "[parameters('storageAccountType')]"
             },
             "properties": {
                 "accountType": "[parameters('storageAccountType')]"
