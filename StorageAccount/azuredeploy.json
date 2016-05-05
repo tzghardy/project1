@@ -2,54 +2,52 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-       "storageType": {
-          "type": "string",
-          "defaultValue": "Standard_LRS",
-          "allowedValues": [
-              "Standard_LRS",
-              "Standard_ZRS",
-              "Standard_GRS",
-              "Standard_RAGRS",
-              "Premium_LRS"
-            ]
-        },
-        "storageAccountName": {
-          "type": "string",
-          "metadata": {
-            "description": "StorageAccountName"
-          }
-        },
-        "storageNameOutput": {
-          "type": "string",
-          "defaultValue": ""
-        }
+      "location": {
+        "type": "string",
+      },
+      "storageAccountType": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_ZRS",
+          "Standard_GRS",
+          "Standard_RAGRS",
+          "Premium_LRS"
+        ]
+      }
     },
     "variables": {
         "rgName": "[resourceGroup().name]",
-        "location": "[resourceGroup().location]",
+        "Standard_LRS": "slrs",
+        "Standard_ZRS": "szrs",
+        "Standard_GRS": "sgrs",
+        "Standard_RAGRS": "sragrs",
+        "Premium_LRS": "plrs",
+        "storageAccountName": "[toLower(concat(variables('rgName'),variables(parameters('storageAccountType'))))]"
     },
     "resources": [
         {
-            "name": "[parameters('storageAccountName')]",
+            "name": "[variables('storageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
-            "location": "[variables('location')]",
+            "location": "[parameters('location')]",
             "apiVersion": "2015-06-15",
             "dependsOn": [ ],
             "tags": {
-                "displayName": "coreStorage",
+                "displayName": "[variables('storageAccountName')]",
                 "type": "storage",
-                "resourceGroup": "core",
+                "resourceGroup": "[variables('rgName')]",
                 "storagetype": "[parameters('storageType')]"
             },
             "properties": {
-                "accountType": "[parameters('storageType')]"
+                "accountType": "[parameters('storageAccountType')]"
             }
         },
     ],
     "outputs":{
-      "storageNameOutput": {
+      "storageAccountNameOut": {
         "type": "string",
-        "value": "[parameters('storageAccountName')]"
+        "value": "[variables('storageAccountName')]"
       }
     }
 }

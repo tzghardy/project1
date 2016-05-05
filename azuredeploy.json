@@ -29,21 +29,29 @@
         "description": "subnet names with the assigned ip address prefix"
       },
       "defaultValue": [
-        {"subnetName":"FESubnet","addressPrefix":"10.0.0.1/24"},
-        {"subnetName":"BESubnet","addressPrefix":"10.0.0.2/24"}
+        {"subnetName":"FESubnet","addressPrefix":"10.0.1.0/24"},
+        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24"}
       ]
+    },
+    "storageAccountType": {
+      "type": "string",
+      "metadata": {
+        "description": "storage account type"
+      },
+      "defaultValue": "Standard_LRS"
     }
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
     "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
+    "storageSetupURI": "[concat(parameters('assetLocation'),'StorageAccount/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
     "apiVersion": "2015-01-01",
     "subnetIndex": "[add(parameters('vnetDefinition')[2],-1)]"
   },
   "resources": [
     {
-      "name": "SettingUPNetworkSecurityGroups",
+      "name": "SettingUpNetworkSecurityGroups",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "properties": {
@@ -69,6 +77,9 @@
       "name": "DeployVnetWithSubnet0",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/SettingUpNetworkSecurityGroups"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -88,7 +99,7 @@
           "SubnetToAddName": {
             "value": "[parameters('subnetDefinition')[0].subnetName]"
           },
-          "SubnetToAddAddresPrefix": {
+          "SubnetToAddAddressPrefix": {
             "value": "[parameters('subnetDefinition')[0].addressPrefix]"
           }
         }
@@ -127,6 +138,22 @@
         }
       }
     },
+    {
+      "name": "DeployStorageAccount",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "properties": {
+        "templateLink": "[variables('storageSetupURI')]"
+      },
+      "parameters": {
+        "location": {
+          "value": "[variables('location')]"
+        },
+        "storageAccountType": {
+          "value": "[parameters('storageAccountType')]"
+        }
+      }
+    }
   ],
   "outputs": {
     "NumberOfSubnets": {
@@ -136,6 +163,10 @@
     "subnets": {
       "type": "array",
       "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition')[2],-1))).outputs.vnetSubnets.value]"
+    },
+    "storageAccountName": {
+      "type": "string",
+      "value": "[reference('DeployStorageAccount.outputs.storageAccountNameOut.value')]"
     }
   }
 }
