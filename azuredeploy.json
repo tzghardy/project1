@@ -29,7 +29,7 @@
         "description": "subnet names with the assigned ip address prefix"
       },
       "defaultValue": [
-        {"subnetName":"FESubnet","addressPrefix":"10.0.0.1/24"},
+        {"subnetName":"FESubnet","addressPrefix":"10.0.0.1/24"}
         {"subnetName":"BESubnet","addressPrefix":"10.0.0.2/24"}
       ]
     },
@@ -69,7 +69,7 @@
       }
     },
     {
-      "name": "SettingUPVirtualNetwork",
+      "name": "DeployVnetWithSubnet0",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "properties": {
@@ -85,17 +85,60 @@
           "vnetDefinition": {
             "value": "[parameters('vnetDefinition')]"
           },
-          "subnetDefinition": {
-            "value": "[parameters('subnetDefinition')]"
+          "subnets": {
+            "value": "[]"
+          },
+          "SubnetToAddName": {
+            "value": "parameters('SubnetDefinition')[0].subnetName"
+          },
+          "SubnetToAddAddresPrefix": {
+            "value": "parameters('SubnetDefinition')[0].addressPrefix"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat('DeployVnetWithSubnet',copyIndex(1))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "copy": {
+        "name": "iteration",
+        "count": "[add(parameters('vnetDefinition')[2],-1)]"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+            "uri": "[variables('VNETSetupURI')]",
+            "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "vnetDefinition": {
+            "value": "[parameters('vnetDefinition')]"
+          },
+          "subnets": {
+            "value": "[reference(concat('DeployVnetWithSubnet',copyIndex())).outputs.vnetSubnets.value]"
+          },
+          "SubnetToAddName": {
+            "value": "parameters('SubnetDefinition')[0].subnetName"
+          },
+          "SubnetToAddAddressPrefix": {
+            "value": "parameters('SubnetDefinition')[0].addressPrefix"
           }
         }
       }
     },
   ],
   "outputs": {
-    "outputvalues": {
+    "NumberOfSubnets": {
       "type": "int",
       "value": "[parameters('vnetDefinition')[2]]"
+    },
+    "subnets": {
+      "type": "array",
+      "value": "[reference(concat('DeployVnetWithSubnet',(parameters('vnetDefinition')[2]).outputs.vnetSubnets.value]"
     }
   }
 }

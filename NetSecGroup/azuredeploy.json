@@ -19,7 +19,7 @@
         "metadata": {
           "description": "subnet definition object"
         }
-      }
+      },
     },
     "variables": {
       "apiVersion": "2015-05-01-preview",
@@ -38,5 +38,6 @@
             "securityRules": []
           }
         },
-    ]
+    ],
+    "outputs": {}
 }

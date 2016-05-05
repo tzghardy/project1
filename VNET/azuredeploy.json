@@ -14,15 +14,37 @@
            "description": "definition for the virtual network"
          }
        },
-       "subnetDefinition": {
+       "subnets": {
          "type": "array",
          "metadata": {
-           "description": "subnet definition object"
+           "description": "current subnet definition for Vnet"
          }
+       },
+       "subnetToAddName": {
+         "type": "string",
+         "metadata": "subnet to add Name"
+       },
+       "subnetToAddAddressPrefix": {
+         "type": "string",
+         "metadata": "subnet to add Address Prefix"
        }
     },
     "variables": {
-      "apiVersion": "2015-06-15"
+      "apiVersion": "2015-06-15",
+      "subnetNew": [
+        {
+          "name": "[parameters('subnetToAddName')]",
+          "properties": {
+            "addressPrefix": "[parameters('subnetToAddAddressPrefix')]",
+            "networkSecurityGroup": {
+              "id": "[resourceId(concat('Microsoft.Networks/networkSecurityGroups',nsg,parameters('subnetToAddName')))"
+            },
+            "tags": {
+              "DisplayName": "[parameters('subnetToAdd')]"
+            }
+          }
+        }
+      ]
     },
     "resources": [
       {
@@ -30,13 +52,10 @@
         "type": "Microsoft.Network/virtualNetworks",
         "location": "[parameters('location')]",
         "apiVersion": "[variables('apiVersion')]",
-        "copy": {
-          "name": "SubnetCreate",
-          "count": "[parameters('vnetDefinition')[2]]"
-        },
+
         "dependsOn": [],
         "tags": {
-            "displayName": "VDC Virtual Network",
+            "displayName": "[parameters('vnetDefinition')[0]]",
             "location": "[parameters('location')]"
         },
         "properties": {
@@ -45,21 +64,18 @@
                 "[parameters('vnetDefinition')[1]]"
               ]
           },
-          "subnets": [
-            {
-              "name": "[toLower(parameters('subnetDefinition')[copyIndex()].subnetName)]",
-              "properties": {
-                "addressPrefix": "[parameters('subnetDefinition')[copyIndex()].addressPrefix]",
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Networks/networkSecurityGroups',parameters('subnetDefinition')[copyIndex()].subnetName)]"
-                }
-              },
-              "tags": {
-                "displayName": "[parameters('subnetDefinition')[copyIndex()].subnetName]",
-              }
-            }
-          ]
+          "subnets": "[concat(parameters('subnets'),variables('subnetNew'))]"
         }
       }
-    ]
+    ],
+    "outputs": {
+      "vnetSubnets": {
+        "type": "array",
+        "value": "[reference(parameters('vnetDefinition')[0]).subnets]"
+      },
+      "vnetLength": {
+        "type": "int",
+        "value": "[length(reference(parameters('vnetDefinition')[0]).subnets)]"
+      },
+    }
 }
