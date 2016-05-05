@@ -37,7 +37,7 @@
           "properties": {
             "addressPrefix": "[parameters('subnetToAddAddressPrefix')]",
             "networkSecurityGroup": {
-              "id": "[resourceId(concat('Microsoft.Networks/networkSecurityGroups',nsg,parameters('subnetToAddName')))"
+              "id": "[resourceId(concat('Microsoft.Networks/networkSecurityGroups',nsg,parameters('subnetToAddName')))]"
             },
             "tags": {
               "DisplayName": "[parameters('subnetToAdd')]"
