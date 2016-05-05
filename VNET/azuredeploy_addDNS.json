@@ -1,0 +1,79 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+       "location": {
+         "type": "string",
+         "metadata": {
+           "description": "location for deployment"
+         },
+         "defaultValue": "eastus"
+       },
+       "vnetDefinition": {
+         "type": "array",
+         "metadata": {
+           "description": "definition for the virtual network"
+         },
+         "defaultValue": ["testvnet","10.0.0.0/8",2]
+       },
+       "subnets": {
+         "type": "array",
+         "metadata": {
+           "description": "current subnet definition for Vnet"
+         },
+         "defaultValue": []
+       },
+       "subnetToAddName": {
+         "type": "string",
+         "metadata": "subnet to add Name"
+       },
+       "subnetToAddAddressPrefix": {
+         "type": "string",
+         "metadata": "subnet to add Address Prefix"
+       },
+       "dnsServerAddresses": {
+         "type": "array",
+         "metadata": {
+           "description": "The DNS servers that will be used for this vnet, port 53 traffic will need to cross subnet boundaries"
+         },
+         "defaultValue": ["10.0.0.1","10.0.0.2"]
+       }
+    },
+    "variables": {
+      "apiVersion": "2015-06-15",
+    },
+    "resources": [
+      {
+        "name": "[parameters('vnetDefinition')[0]]",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[parameters('location')]",
+        "apiVersion": "[variables('apiVersion')]",
+        "dependsOn": [],
+        "tags": {
+            "displayName": "[parameters('vnetDefinition')[0]]",
+            "location": "[parameters('location')]"
+        },
+        "properties": {
+          "addressSpace": {
+              "addressPrefixes": [
+                "[parameters('vnetDefinition')[1]]"
+              ]
+          },
+          "subnets": "[parameters('subnets')]",
+          "dhcpOptions": {
+            "DNSServers": "[parameters('dnsServerAddresses')]"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "vnetSubnets": {
+        "type": "array",
+        "value": "[reference(parameters('vnetDefinition')[0]).subnets]"
+      },
+      "vnetLength": {
+        "type": "int",
+        "value": "[length(reference(parameters('vnetDefinition')[0]).subnets)]"
+      },
+    }
+}

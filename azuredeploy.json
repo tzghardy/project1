@@ -143,14 +143,18 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "properties": {
-        "templateLink": "[variables('storageSetupURI')]"
-      },
-      "parameters": {
-        "location": {
-          "value": "[variables('location')]"
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('storageSetupURI')]",
+          "contentVersion": "1.0.0.0"
         },
-        "storageAccountType": {
-          "value": "[parameters('storageAccountType')]"
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "storageAccountType": {
+            "value": "[parameters('storageAccountType')]"
+          }
         }
       }
     }
@@ -166,7 +170,7 @@
     },
     "storageAccountName": {
       "type": "string",
-      "value": "[reference('DeployStorageAccount.outputs.storageAccountNameOut.value')]"
+      "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
     }
   }
 }
