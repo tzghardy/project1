@@ -39,7 +39,9 @@
           "name": "[parameters('subnetToAddName')]",
           "properties": {
             "addressPrefix": "[parameters('subnetToAddAddressPrefix')]",
-
+            "networkSecurityGroup": {
+              "id": "[resourceId(concat('Microsoft.Networks/networkSecurityGroups','nsg',parameters('subnetToAddName')))]"
+            },
             "tags": {
               "DisplayName": "[parameters('subnetToAddName')]"
             }
@@ -53,7 +55,6 @@
         "type": "Microsoft.Network/virtualNetworks",
         "location": "[parameters('location')]",
         "apiVersion": "[variables('apiVersion')]",
-
         "dependsOn": [],
         "tags": {
             "displayName": "[parameters('vnetDefinition')[0]]",
