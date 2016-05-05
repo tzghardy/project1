@@ -6,19 +6,22 @@
          "type": "string",
          "metadata": {
            "description": "location for deployment"
-         }
+         },
+         "defaultValue": "eastus"
        },
        "vnetDefinition": {
          "type": "array",
          "metadata": {
            "description": "definition for the virtual network"
-         }
+         },
+         "defaultValue": ["testvnet","10.0.0.0/8",2]
        },
        "subnets": {
          "type": "array",
          "metadata": {
            "description": "current subnet definition for Vnet"
-         }
+         },
+         "defaultValue": []
        },
        "subnetToAddName": {
          "type": "string",
@@ -36,9 +39,7 @@
           "name": "[parameters('subnetToAddName')]",
           "properties": {
             "addressPrefix": "[parameters('subnetToAddAddressPrefix')]",
-            "networkSecurityGroup": {
-              "id": "[resourceId(concat('Microsoft.Networks/networkSecurityGroups',nsg,parameters('subnetToAddName')))]"
-            },
+
             "tags": {
               "DisplayName": "[parameters('subnetToAdd')]"
             }
