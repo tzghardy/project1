@@ -29,13 +29,9 @@
         "description": "subnet names with the assigned ip address prefix"
       },
       "defaultValue": [
-        {"subnetName":"FESubnet","addressPrefix":"10.0.0.1/24"}
+        {"subnetName":"FESubnet","addressPrefix":"10.0.0.1/24"},
         {"subnetName":"BESubnet","addressPrefix":"10.0.0.2/24"}
       ]
-    },
-    "outputValues": {
-      "type": "string",
-      "defaultValue": ""
     }
   },
   "variables": {
@@ -43,6 +39,7 @@
     "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
     "apiVersion": "2015-01-01",
+    "subnetIndex": "[add(parameters('vnetDefinition')[2],-1)]"
   },
   "resources": [
     {
@@ -86,13 +83,13 @@
             "value": "[parameters('vnetDefinition')]"
           },
           "subnets": {
-            "value": "[]"
+            "value": []
           },
           "SubnetToAddName": {
-            "value": "parameters('SubnetDefinition')[0].subnetName"
+            "value": "[parameters('subnetDefinition')[0].subnetName]"
           },
           "SubnetToAddAddresPrefix": {
-            "value": "parameters('SubnetDefinition')[0].addressPrefix"
+            "value": "[parameters('subnetDefinition')[0].addressPrefix]"
           }
         }
       }
@@ -122,10 +119,10 @@
             "value": "[reference(concat('DeployVnetWithSubnet',copyIndex())).outputs.vnetSubnets.value]"
           },
           "SubnetToAddName": {
-            "value": "parameters('SubnetDefinition')[0].subnetName"
+            "value": "[parameters('subnetDefinition')[copyIndex(1)].subnetName]"
           },
           "SubnetToAddAddressPrefix": {
-            "value": "parameters('SubnetDefinition')[0].addressPrefix"
+            "value": "[parameters('subnetDefinition')[copyIndex(1)].addressPrefix]"
           }
         }
       }
@@ -138,7 +135,7 @@
     },
     "subnets": {
       "type": "array",
-      "value": "[reference(concat('DeployVnetWithSubnet',(parameters('vnetDefinition')[2]).outputs.vnetSubnets.value]"
+      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition')[2],-1))).outputs.vnetSubnets.value]"
     }
   }
 }
