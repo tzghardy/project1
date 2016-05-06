@@ -22,8 +22,9 @@
         "description": "vnet definition with name, addressprefix and number of subnets"
       },
       "defaultValue": [
-          {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
-    ],
+        {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
+      ]
+    },
     "subnetDefinition": {
       "type": "array",
       "metadata": {
