@@ -17,13 +17,15 @@
       "defaultValue": "vdc2"
     },
     "vnetDefinition": {
-      "type": "array",
+      "type": "object",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
       },
-      "defaultValue": [
-        {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
-      ]
+      "defaultValue": {
+        "vnetName":"testvnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":2
+      }
     },
     "subnetDefinition": {
       "type": "array",
@@ -116,7 +118,7 @@
       ],
       "copy": {
         "name": "iteration",
-        "count": "[add(parameters('vnetDefinition')[0].subnetCount,-1)]"
+        "count": "[add(parameters('vnetDefinition').subnetCount,-1)]"
       },
       "properties": {
         "mode": "Incremental",
@@ -167,11 +169,11 @@
   "outputs": {
     "NumberOfSubnets": {
       "type": "int",
-      "value": "[parameters('vnetDefinition')[0].subnetCount]"
+      "value": "[parameters('vnetDefinition').subnetCount]"
     },
     "subnets": {
       "type": "array",
-      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition')[0].subnetCount,-1))).outputs.vnetSubnets.value]"
+      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition').subnetCount,-1))).outputs.vnetSubnets.value]"
     },
     "storageAccountName": {
       "type": "string",

@@ -9,7 +9,7 @@
         }
       },
       "vnetDefinition": {
-        "type": "array",
+        "type": "object",
         "metadata": {
           "description": "vnet definition array"
         }
@@ -32,7 +32,7 @@
           "location": "[parameters('location')]",
           "copy": {
             "name": "NSGRulesCopy",
-            "count": "[parameters('vnetDefinition')[0].subnetCount]"
+            "count": "[parameters('vnetDefinition').subnetCount]"
           },
           "properties": {
             "securityRules": []

@@ -10,7 +10,7 @@
          "defaultValue": "eastus"
        },
        "vnetDefinition": {
-         "type": "array",
+         "type": "object",
          "metadata": {
            "description": "definition for the virtual network"
          },
@@ -53,19 +53,19 @@
     },
     "resources": [
       {
-        "name": "[parameters('vnetDefinition')[0].vnetName]",
+        "name": "[parameters('vnetDefinition').vnetName]",
         "type": "Microsoft.Network/virtualNetworks",
         "location": "[parameters('location')]",
         "apiVersion": "[variables('apiVersion')]",
         "dependsOn": [],
         "tags": {
-            "displayName": "[parameters('vnetDefinition')[0].vnetName]",
+            "displayName": "[parameters('vnetDefinition').vnetName]",
             "location": "[parameters('location')]"
         },
         "properties": {
           "addressSpace": {
               "addressPrefixes": [
-                "[parameters('vnetDefinition')[0].addressPrefix]"
+                "[parameters('vnetDefinition').addressPrefix]"
               ]
           },
           "subnets": "[concat(parameters('subnets'),variables('subnetNew'))]"
@@ -75,11 +75,11 @@
     "outputs": {
       "vnetSubnets": {
         "type": "array",
-        "value": "[reference(parameters('vnetDefinition')[0].vnetName).subnets]"
+        "value": "[reference(parameters('vnetDefinition').vnetName).subnets]"
       },
       "vnetLength": {
         "type": "int",
-        "value": "[length(reference(parameters('vnetDefinition')[0].vnetName).subnets)]"
+        "value": "[length(reference(parameters('vnetDefinition').vnetName).subnets)]"
       },
     }
 }
