@@ -9,7 +9,7 @@
       },
       "defaultValue": "https://raw.githubusercontent.com/tzghardy/project1/master/"
     },
-    "VDCName": {
+    "vdcName": {
       "type": "string",
       "metadata": {
         "description": "vdcname to construct other variables"
