@@ -14,9 +14,9 @@
          "metadata": {
            "description": "definition for the virtual network"
          },
-         "defaultValue": [
-           {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
-         ]
+         "defaultValue": {
+           "vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2
+         }
        },
        "subnets": {
          "type": "array",
