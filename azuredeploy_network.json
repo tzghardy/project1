@@ -17,16 +17,13 @@
       "defaultValue": "vdc2"
     },
     "vnetDefinition": {
-      "type": "object",
+      "type": "array",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
       },
-      "defaultValue": {
-        "vnetName":"testvnet",
-        "addressPrefix":"10.0.0.0/8",
-        "subnetCount":2
-      }
-    },
+      "defaultValue": [
+          {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
+    ],
     "subnetDefinition": {
       "type": "array",
       "metadata": {
@@ -51,11 +48,10 @@
     "storageSetupURI": "[concat(parameters('assetLocation'),'StorageAccount/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
     "apiVersion": "2015-01-01",
-    "subnetIndex": "[add(parameters('vnetDefinition').subnetCount,-1)]"
   },
   "resources": [
     {
-      "name": "SettingUpNetworkSecurityGroups",
+      "name": "DeployNetworkSecurityGroups",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "properties": {
@@ -82,7 +78,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "dependsOn": [
-        "Microsoft.Resources/deployments/SettingUpNetworkSecurityGroups"
+        "Microsoft.Resources/deployments/DeployNetworkSecurityGroups"
       ],
       "properties": {
         "mode": "Incremental",
@@ -113,9 +109,13 @@
       "name": "[concat('DeployVnetWithSubnet',copyIndex(1))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/DeployNetworkSecurityGroups",
+        "Microsoft.Resources/deployments/DeployVnetWithSubnet0"
+      ],
       "copy": {
         "name": "iteration",
-        "count": "[add(parameters('vnetDefinition').subnetCount,-1)]"
+        "count": "[add(parameters('vnetDefinition')[0].subnetCount,-1)]"
       },
       "properties": {
         "mode": "Incremental",
@@ -166,11 +166,11 @@
   "outputs": {
     "NumberOfSubnets": {
       "type": "int",
-      "value": "[parameters('vnetDefinition').subnetCount]"
+      "value": "[parameters('vnetDefinition')[0].subnetCount]"
     },
     "subnets": {
       "type": "array",
-      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition').subnetCount,-1))).outputs.vnetSubnets.value]"
+      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition')[0].subnetCount,-1))).outputs.vnetSubnets.value]"
     },
     "storageAccountName": {
       "type": "string",

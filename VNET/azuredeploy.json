@@ -10,15 +10,13 @@
          "defaultValue": "eastus"
        },
        "vnetDefinition": {
-         "type": "object",
+         "type": "array",
          "metadata": {
            "description": "definition for the virtual network"
          },
-         "defaultValue": {
-           "vnetName":"testvnet",
-           "addressPrefix":"10.0.0.0/8",
-           "subnetCount":2
-         }
+         "defaultValue": [
+           {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
+         ]
        },
        "subnets": {
          "type": "array",
@@ -55,19 +53,19 @@
     },
     "resources": [
       {
-        "name": "[parameters('vnetDefinition').vnetName]",
+        "name": "[parameters('vnetDefinition')[0].vnetName]",
         "type": "Microsoft.Network/virtualNetworks",
         "location": "[parameters('location')]",
         "apiVersion": "[variables('apiVersion')]",
         "dependsOn": [],
         "tags": {
-            "displayName": "[parameters('vnetDefinition').vnetName]",
+            "displayName": "[parameters('vnetDefinition')[0].vnetName]",
             "location": "[parameters('location')]"
         },
         "properties": {
           "addressSpace": {
               "addressPrefixes": [
-                "[parameters('vnetDefinition').addressPrefix]"
+                "[parameters('vnetDefinition')[0].addressPrefix]"
               ]
           },
           "subnets": "[concat(parameters('subnets'),variables('subnetNew'))]"
@@ -77,11 +75,11 @@
     "outputs": {
       "vnetSubnets": {
         "type": "array",
-        "value": "[reference(parameters('vnetDefinition').vnetName).subnets]"
+        "value": "[reference(parameters('vnetDefinition')[0].vnetName).subnets]"
       },
       "vnetLength": {
         "type": "int",
-        "value": "[length(reference(parameters('vnetDefinition').vnetName).subnets)]"
+        "value": "[length(reference(parameters('vnetDefinition')[0].vnetName).subnets)]"
       },
     }
 }
