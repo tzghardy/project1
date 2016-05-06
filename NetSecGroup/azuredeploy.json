@@ -32,7 +32,7 @@
           "location": "[parameters('location')]",
           "copy": {
             "name": "NSGRulesCopy",
-            "count": "[parameters('vnetDefinition')[2]]"
+            "count": "[parameters('vnetDefinition')[0].subnetCount]"
           },
           "properties": {
             "securityRules": []
