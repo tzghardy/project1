@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus"
+    },
+    "vdcName": {
+      "type": "string",
+      "defaultValue": "VDC2"
+    },
+    "publicIPInformation": {
+      "type": "object",
+      "metadata": {
+        "description": "public IP address object characteristics"
+      },
+      "defaultValue": {
+        "publicIPNameBase": "nameBase",
+        "publicIPDNSPrefix": "abrac234",
+        "publicIPAddressType": "Dynamic"
+      }
+    }
+  },
+  "variables": {
+    "apiVer": "2015-06-15",
+    "rgName": "[resourceGroup().name]",
+    "PIPName": "[concat('PIP-',parameters('vdcName'),parameters('publicIPInformation').publicIPNameBase)]"
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVer')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('PIPName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPInformation').publicIPAddressType]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('publicIPInformation').publicIPDNSPrefix]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "publicIpId": {
+      "value": "[resourceId(concat('Microsoft.Network/publicIPAddresses/'),variables('PIPName'))]",
+      "type": "string"
+    },
+    "fqdn": {
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses/',variables('PIPName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+      "type": "string"
+    }
+  }
+}

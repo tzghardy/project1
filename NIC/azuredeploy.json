@@ -1,0 +1,83 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus"
+    },
+    "vnetDefinition": {
+      "type": "object",
+      "metadata": {
+        "description": "vnet definition with name, addressprefix and number of subnets"
+      },
+      "defaultValue": {
+        "vnetName":"testvnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":3
+      }
+    },
+    "nicName": {
+      "type": "string",
+      "defaultValue": "nic0"
+    },
+    "IPAssignment": {
+      "type": "string",
+      "allowedValues": [
+        "Dynamic",
+        "Static"
+      ],
+      "defaultValue": "Dynamic"
+    },
+    "IPAddress": {
+      "type": "string",
+      "defaultValue": "10.0.1.25"
+    },
+    "publicIPID": {
+      "type": "string",
+      "defaultValue": "abrac234"
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "BESubnet"
+    }
+  },
+  "variables": {
+    "apiVer": "2015-06-15",
+    "rgName": "[resourceGroup().name]",
+    "virtualNetworkName": "[parameters('vnetDefinition').vnetName]",
+    "VnetID": "[resourceId(variables('rgName'),'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+    "nicSubnetRef": "[concat(variables('VnetID'),'/subnets/',parameters('subnetName'))]",
+  },
+  "resources": [
+    {
+        "apiVersion": "[variables('apiVer')]",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[parameters('nicName')]",
+        "location": "[parameters('location')]",
+        "properties": {
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAllocationMethod": "[parameters('IPAssignment')]",
+                        "privateIPAddress" : "[parameters('IPAddress')]",
+                        "subnet": {
+                            "id": "[parameters('nicSubnetRef')]"
+                        },
+                        "publicIPAddress": {
+                          "id": "[parameters('publicIPID')]"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+  ],
+  "outputs": {
+    "nicID": {
+      "type": "array",
+      "value": "[resourceId(concat('Microsoft.Netork/networkInterfaces',parameters('nicName')))]"
+    }
+  }
+}
