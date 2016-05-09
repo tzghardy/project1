@@ -115,7 +115,7 @@
           }
         }
       }
-    }
+    },
     {
       "name": "DeployVnetWithSubnet0",
       "type": "Microsoft.Resources/deployments",
