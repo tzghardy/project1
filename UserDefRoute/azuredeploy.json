@@ -47,7 +47,7 @@
                 "properties": {
                   "addressPrefix": "0.0.0.0/0",
                   "nextHopType": "VirtualAppliance",
-                  "nextHopIpAddress": "[parameters('vmIpAddress').parameters('subnetDefinition')[copyIndex()].subnetName]"
+                  "nextHopIpAddress": "[parameters('routerIPAddresses').parameters('subnetDefinition')[copyIndex()].subnetName]"
                 }
               }
             ]
