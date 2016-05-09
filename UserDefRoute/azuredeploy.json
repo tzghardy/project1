@@ -20,15 +20,15 @@
           "description": "subnet definition object"
         }
       },
-      "vmaIpAddress": {
-        "type": "string",
+      "routerIPAddresses": {
+        "type": "object",
         "metadata": {
-          "description": "route virtual appliance IP"
+          "description": "router IP Address assignment"
         }
       }
     },
     "variables": {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2015-08-01",
     },
     "resources": [
         {
@@ -43,11 +43,11 @@
           "properties": {
             "routes": [
               {
-                "name": "RouteToFrontEnd",
+                "name": "[concat('DefaultRoute-',parameters('subnetDefinition')[copyIndex()].subnetName)]",
                 "properties": {
-                  "addressPrefix": "[parameters('subnetDefinition)[copyIndex()].addressPrefix]",
+                  "addressPrefix": "0.0.0.0/0",
                   "nextHopType": "VirtualAppliance",
-                  "nextHopIpAddress": "[parameters('vmaIpAddress')]"
+                  "nextHopIpAddress": "[parameters('vmIpAddress').parameters('subnetDefinition')[copyIndex()].subnetName]"
                 }
               }
             ]

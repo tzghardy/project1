@@ -2,129 +2,122 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VDCName": {
-          "type": "string"
+      "vdcName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "storage account name for deployment"
         },
-        "storageType": {
-          "type": "string",
-          "metadata": {
-            "description": "storage type for storage account in resource group."
-          },
-          "defaultValue": "LRS"
+        "defaultValue": ""
+      },
+      "vnetDefinition": {
+        "type": "object",
+        "metadata": {
+          "description": "vnet definition with name, addressprefix and number of subnets"
         },
-        "FEsubnetName": {
-            "type": "string",
-            "defaultValue": "subnetFEFixed",
-            "metadata": {
-                "description": "Front End Fixed Subnet Name"
-            }
-        },
-        "FEfixedIPAddress": {
-          "type": "string",
-          "metadata": {
-            "description": "Fixed IP in FE Subnet"
-          }
-        },
-        "SECsubnetName": {
-            "type": "string",
-            "defaultValue": "subnetSECFixed",
-            "metadata": {
-                "description": "Subnet 2 Name"
-            }
-        },
-        "SECFixedIPAddress" : {
-            "type" : "string",
-            "metadata" : {
-                "description" : "SEC Subnet Fixed IP Address"
-            }
-        },
-        "adminUsername": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Username for the Virtual Machine."
-            }
-        },
-        "adminPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Password for the Virtual Machine."
-            }
-        },
-        "sshPublicKey": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "SSH Key for the virtual machines"
-            }
-        },
-        "authenticationType": {
-            "type": "string",
-            "defaultValue": "password",
-            "allowedValues": [
-                "password",
-                "sshPublicKey"
-            ],
-            "metadata": {
-                "description": "Authentication Type to chose for the Virtual Machines"
-            }
-        },
-        "vmName": {
-            "type": "string",
-            "defaultValue": "CSR",
-            "metadata": {
-                "description": "Name for the Virtual Machine."
-            }
-        },
-        "publicIPAddressName": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Name of the Public IP Address"
-            }
-        },
-        "publicIPDnsName": {
-            "type": "string",
-            "defaultValue": "csrdns",
-            "metadata": {
-                "description": "Unique DNS Prefix for the Public IP used to access the Virtual Machine."
-            }
-        },
-        "baseUrl": {
-            "type": "string",
-            "metadata": {
-                "artifactsBaseUrl": "",
-                "description": "URL to acquire other templates"
-            },
-            "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/cisco-csr-1000v"
+        "defaultValue": {
+          "vnetName":"testvnet",
+          "addressPrefix":"10.0.0.0/8",
+          "subnetCount":2
         }
+      },
+      "vmCharacteristics": {
+        "type": "object",
+        "metadata": {
+          "description": "hardware and infrastructure characteristics of vm"
+        },
+        "defaultValue": {
+          "vmName": "CSR",
+          "vmSize": "Standard_D2",
+          "nicCount": 2,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.0.14"},
+            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.1.14"}
+          ]
+        }
+      },
+      "vmGalleryInfo": {
+        "type": "object",
+        "metadata": {
+          "description": "Azure Marketplace Information"
+        },
+        "defaultValue": {
+          "imagePublisher": "cisco",
+          "imageOffer": "cisco-csr-1000v",
+          "imageSKU": "csr-azure-byol",
+        }
+      },
+      "publicIPInformation": {
+        "type": "object",
+        "metadata": {
+          "description": "public IP address object characteristics"
+        },
+        "defaultValue": {
+          "publicIPNameBase": "CSR",
+          "publicIPDNSPrefix": "abracisco01new",
+          "publicIPAddressType": "Dynamic"
+        }
+      },
+      "adminUsername": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+              "description": "Username for the Virtual Machine."
+          }
+      },
+      "adminPassword": {
+          "type": "securestring",
+          "metadata": {
+              "description": "Password for the Virtual Machine."
+          }
+      },
+      "sshPublicKey": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+              "description": "SSH Key for the virtual machines"
+          }
+      },
+      "authenticationType": {
+          "type": "string",
+          "defaultValue": "password",
+          "allowedValues": [
+              "password",
+              "sshPublicKey"
+          ],
+          "metadata": {
+              "description": "Authentication Type to chose for the Virtual Machines"
+          }
+      },
+      "assetLocation": {
+          "type": "string",
+          "metadata": {
+              "artifactsBaseUrl": "",
+              "description": "URL to acquire other templates"
+          },
+          "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/cisco-csr-1000v"
+      }
     },
-
     "variables": {
-        "location": "[resourceGroup().location]",
-        "imagePublisher": "cisco",
-        "imageOffer": "cisco-csr-1000v",
-        "imageSKU": "csr-azure-byol",
-        "storageAccount": "[toLower(resourceGroup().Name,parameters('storageType'))]",
-        "storageAccountUri": "[toLower(concat('https://',variables('storageAccount'),'.blob.core.windows.net/',parameters('vmName')))]",
+        "storageAccountUri": "[toLower(concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('vmName')))]",
         "OSDiskName": "osdisk",
-        "vmStorageAccountContainerName": "csr",
-        "virtualNetworkName": "[concat(parameters('VDCName'),'vnet')]",
-        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-        "FESubnetIDBase":"[toLower(concat(parameters('VDCName'),parameters('FEsubnetName')))]",
-        "SECSubnetIDBase": "[toLower(concat(parameters('VDCName'),parameters('SECsubnetName')))]",
-        "vmSize": "Standard_D2",
-        "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', variables('FESubnetIDBase'))]",
-        "subnet2Ref": "[concat(variables('vnetID'),'/subnets/', variables('SECSubnetIDBase'))]",
-        "nsgName": "[concat(parameters('VDCName'),'nsg',parameters('FEsubnetName'))]",
-        "nsgEndpoint": "[concat(parameters('FEfixedIPAddress'),'/32')]",
+        "vmStorageAccountContainerName": "[parameters('vmCharacteristics').vmName]",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetDefinition').vnetName)]",
+        "subnet0Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[0].subnet)]",
+        "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[1].subnet)]",
+        "deployApiVer": "2015-01-01",
         "apiVer": "2015-06-15",
-        "publicIPAddressType": "Dynamic",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
-        "publicIPSetupURL": "[concat(parameters('baseUrl'),'/publicip.json')]",
+        "publicIPSetupURI": "[concat(parameters('assetLocation'),'/publicip.json')]",
+        "nsgAddRuleURI": "[concat(parameters('assetLocation'),'NetSecgGroup/add_rule/azuredeploy.json')]",
         "osProfile": "[variables(concat('osprofile',parameters('authenticationType')))]",
         "osProfilesshPublicKey": {
-            "computerName": "[parameters('vmName')]",
+            "computerName": "[concat(parameters('vdcName'),parameters('vmCharacteristics').vmName]",
             "adminUsername": "[parameters('adminUsername')]",
             "linuxConfiguration": {
                 "disablePasswordAuthentication": "true",
@@ -139,89 +132,102 @@
             }
         },
         "osProfilepassword": {
-            "computerName": "[parameters('vmName')]",
+            "computerName": "[parameters('vmCharacteristics').vmName]",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
+        },
+        "vmSecurityRules": [
+          {
+          "name": "[concat(parameters('vmCharacteristics').vmName,'SSH_Allow')]",
+          "properties": {
+            "description": "AllowSSH",
+            "protocol": "Tcp",
+            "sourcePortRange": "*",
+            "destinationPortRange": "22",
+            "sourceAddressPrefix": "Internet",
+            "destinationAddressPrefix": "[concat(parameters('vmCharacteristics').nicInfo[0].IPAddress,'/32')]",
+            "access": "Allow",
+            "priority": 1100,
+            "direction": "Inbound"
+          }
         }
+      ]
     },
     "resources": [
         {
-            "name": "SettingUpPublicIP",
+            "name": "DeployPublicIP",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
+            "apiVersion": "[variables('deployApiVer')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('publicIPSetupURL')]",
+                    "uri": "[variables('publicIPSetupURI')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "vdcName": {
+                      "value": "[parameters('vdcName')]"
+                    },
                     "location": {
-                        "value": "[variables('location')]"
+                        "value": "[parameters('location')]"
                     },
-                    "publicIPAddressName": {
-                        "value": "[parameters('publicIPAddressName')]"
-                    },
-                    "publicIPAddressType": {
-                        "value": "[variables('publicIPAddressType')]"
-                    },
-                    "dnsPrefix": {
-                        "value": "[parameters('publicIPDnsName')]"
-                    },
-                    "publicIpRGName" : {
-                        "value" : "[resourceGroup().name]"
+                    "publicIPInformation": {
+                        "value": "[parameters('publicIPInformation')]"
                     }
                 }
             }
         },
         {
-            "apiVersion": "[variables('apiVer')]",
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[variables('nsgName')]",
-            "location": "[variables('location')]",
+            "apiVersion": "[variables('deployApiVer')]",
+            "type": "Microsoft.Network/deployments",
+            "name": "DeployCsrNsgRuleRequirements",
             "properties": {
                 "mode": "Incremental",
-                "securityRules": [
-                    {
-                        "name": "CSR_SSH_Allow",
-                        "properties": {
-                            "description": "Allow SSH",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "Internet",
-                            "destinationAddressPrefix": "[variables('nsgEndpoint')]",
-                            "access": "Allow",
-                            "priority": 1100,
-                            "direction": "Inbound"
-                        }
-                    }
-                ]
+                "templateLink": {
+                  "uri": "[variables('nsgAddRuleURI')]",
+                  "contentVersion": "1.0.0.0"
+                }
+            },
+            "parameters": {
+              "location": {
+                "value": "[parameters('location')]"
+              },
+              "vmSecurityRules": {
+                "value": "[variables('vmSecurityRules')]"
+              }
             }
         },
         {
+            "type": "Microsoft.Network/deployments",
+            "name": "[concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]",
             "apiVersion": "[variables('apiVer')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('vmName'),'-nic0')]",
-            "location": "[variables('location')]",
+            "location": "[parameters('location')]",
             "dependsOn": [
-              "[resourceId('Microsoft.Resources/deployments','SettingUpPublicIP')]"
+              "[resourceId('Microsoft.Resources/deployments','DeployPublicIP')]"
             ],
             "properties": {
+              "templateLink": {
+                "templateUrI": "$deployNIC",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "nicName": {
+                  "value": ""
+                }
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress" : "[parameters('FEfixedIPAddress')]",
+                            "privateIPAddress" : "[parameters('vmCharacteristics')]",
                             "subnet": {
-                                "id": "[variables('subnet1Ref')]"
-                            },
-                            "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+                                "id": "[variables('subnet0Ref')]"
                             },
                             "publicIPAddress": {
-                              "id": "[resourceID('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]"
+                              "id": "[DeployPublicIP.outputs.publicIpId.value]"
                             }
                         }
                     }
@@ -231,7 +237,7 @@
         {
             "apiVersion": "[variables('apiVer')]",
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('vmName'),'-nic1')]",
+            "name": "[concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]",
             "location": "[variables('location')]",
             "dependsOn": [],
             "properties": {
@@ -240,9 +246,9 @@
                         "name": "ipconfig1",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress" : "[parameters('SECFixedIPAddress')]",
+                            "privateIPAddress" : "[parameters('vmCharacteristics').nicInfo[1].IPAddress]",
                             "subnet": {
-                                "id": "[variables('subnet2Ref')]"
+                                "id": "[variables('subnet1Ref')]"
                             }
                         }
                     }
@@ -253,27 +259,27 @@
         {
             "apiVersion": "[variables('apiVer')]",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[parameters('vmName')]",
-            "location": "[variables('location')]",
+            "name": "[parameters('vmCharacteristics').vmName]",
+            "location": "[parameters('location')]",
             "plan": {
-                "name": "csr-azure-byol",
-                "publisher": "cisco",
-                "product": "cisco-csr-1000v"
+              "name": "[parameters('vmGalleryInfo').imageSKU]",
+              "publisher": "[parameters('vmGalleryInfo').imagePublisher]",
+              "product": "[parameters('vmGalleryInfo').imageOffer]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName'),'-nic0')]",
-                "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName'),'-nic1')]"
+                "[concat('Microsoft.Network/networkInterfaces/',parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]",
+                "[concat('Microsoft.Network/networkInterfaces/',parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]"
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "[variables('vmSize')]"
+                    "vmSize": "[parameters('vmCharacteristics').vmSize]"
                 },
                 "osProfile": "[variables('osProfile')]",
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "[variables('imagePublisher')]",
-                        "offer": "[variables('imageOffer')]",
-                        "sku": "[variables('imageSKU')]",
+                        "publisher": "[parameters('vmGalleryInfo').imagePublisher]",
+                        "offer": "[parameters('vmGalleryInfo').imageOffer]",
+                        "sku": "[parameters('vmGalleryInfo').imageSKU]",
                         "version": "latest"
                     },
                     "osDisk": {

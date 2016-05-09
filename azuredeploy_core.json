@@ -17,15 +17,13 @@
       "defaultValue": "vdc2"
     },
     "vnetDefinition": {
-      "type": "object",
+      "type": "array",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
       },
-      "defaultValue": {
-        "vnetName":"testvnet",
-        "addressPrefix":"10.0.0.0/8",
-        "subnetCount":3
-      }
+      "defaultValue": [
+        {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
+      ]
     },
     "subnetDefinition": {
       "type": "array",
@@ -34,8 +32,7 @@
       },
       "defaultValue": [
         {"subnetName":"FESubnet","addressPrefix":"10.0.1.0/24"},
-        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24"},
-        {"subnetName":"SECSubnet","addressPrefix":"10.0.3.0/24"}
+        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24"}
       ]
     },
     "storageAccountType": {
@@ -44,22 +41,10 @@
         "description": "storage account type"
       },
       "defaultValue": "Standard_LRS"
-    },
-    "routerIPAddresses": {
-      "type": "object",
-      "metadata": {
-        "description": "UDR VMAppliance Interface Information"
-      },
-      "defaultValue": {
-        "FESubnet": "10.0.1.11",
-        "BESubnet": "10.0.2.11",
-        "SECSubnet": "10.0.3.11"
-      }
     }
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
-    "UDRSetupURI": "[concat(parameters('assetLocation'),'UserDefRoute/azuredeploy.json')]",
     "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
     "storageSetupURI": "[concat(parameters('assetLocation'),'StorageAccount/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
@@ -89,33 +74,6 @@
         }
       }
     },
-    {
-      "name": "DeployUserDefinedRoutes",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion')]",
-      "dependsOn": [],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('UDRSetupURI')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[variables('location')]",
-          },
-          "vnetDefinition": {
-            "value": "[parameters('vnetDefinition')]"
-          },
-          "subnetDefinition": {
-            "value": "[parameters('subnetDefinition')]"
-          },
-          "routerIPAddresses": {
-            "value": "[parameters('routerIPAddresses')]"
-          }
-        }
-      }
-    }
     {
       "name": "DeployVnetWithSubnet0",
       "type": "Microsoft.Resources/deployments",
@@ -158,7 +116,7 @@
       ],
       "copy": {
         "name": "iteration",
-        "count": "[add(parameters('vnetDefinition').subnetCount,-1)]"
+        "count": "[add(parameters('vnetDefinition')[0].subnetCount,-1)]"
       },
       "properties": {
         "mode": "Incremental",
@@ -209,11 +167,11 @@
   "outputs": {
     "NumberOfSubnets": {
       "type": "int",
-      "value": "[parameters('vnetDefinition').subnetCount]"
+      "value": "[parameters('vnetDefinition')[0].subnetCount]"
     },
     "subnets": {
       "type": "array",
-      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition').subnetCount,-1))).outputs.vnetSubnets.value]"
+      "value": "[reference(concat('DeployVnetWithSubnet',add(parameters('vnetDefinition')[0].subnetCount,-1))).outputs.vnetSubnets.value]"
     },
     "storageAccountName": {
       "type": "string",
