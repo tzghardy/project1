@@ -34,7 +34,7 @@
         {
           "apiVersion": "[variables('apiVersion')]",
           "type": "Microsoft.Network/routeTables",
-          "name": "[toLower(concat('udr',parameters('subnetName')]",
+          "name": "[toLower(concat('udr',parameters('subnetName')))]",
           "location": "[parameters('location')]",
           "properties": {
             "routes": [
