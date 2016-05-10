@@ -39,13 +39,12 @@
   "variables": {
     "apiVer": "2015-06-15",
     "rgName": "[resourceGroup().name]",
-    "PIPName": "[concat('PIP-',parameters('vdcName'),parameters('publicIPName'))]"
   },
   "resources": [
     {
       "apiVersion": "[variables('apiVer')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('PIPName')]",
+      "name": "[parameters('publicIPName')]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "[parameters('publicIPAllocationMethod')]",

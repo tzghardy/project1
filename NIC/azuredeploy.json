@@ -45,7 +45,7 @@
   "variables": {
     "apiVer": "2015-06-15",
     "rgName": "[resourceGroup().name]",
-    "VnetID": "[resourceId(variables('rgName'),'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+    "VnetID": "[resourceId(variables('rgName'),'/Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
     "nicSubnetRef": "[concat(variables('VnetID'),'/subnets/',parameters('subnetName'))]",
   },
   "resources": [
