@@ -155,7 +155,7 @@
             "sourceAddressPrefix": "Internet",
             "destinationAddressPrefix": "[concat(parameters('vmCharacteristics').nicInfo[0].IPAddress,'/32')]",
             "access": "Allow",
-            "priority": 1100,
+            "priority": "1100",
             "direction": "Inbound"
           }
         }
