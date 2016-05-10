@@ -73,8 +73,7 @@
         "adminUsername": "csrAdministrator",
         "adminPassword": "tempkey123!",
         "sshPublicKey": "",
-        "authenticationType": "password"
-        }
+        "authType": "password"
       }
     }
   },
@@ -249,7 +248,7 @@
             "value": "[parameters('vdcName')]"
           },
           "storageAccountName": {
-            "value": "[reference(concat('DeployStorageAccount',outputs.storageAccountNameOut.value)]"
+            "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
           },
           "vnetDefinition": {
             "value": "[parameters('vnetDefinition')]"

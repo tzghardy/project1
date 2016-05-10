@@ -214,7 +214,7 @@
         {
           "type": "Microsoft.Network/deployments",
           "name": "DeployNIC0",
-          "apiVersion": "[variables('apiVer')]",
+          "apiVersion": "[variables('deployApiVer')]",
           "location": "[parameters('location')]",
           "dependsOn": [
             "[resourceId('Microsoft.Resources/deployments','DeployPublicIP')]"
@@ -255,7 +255,7 @@
         {
           "type": "Microsoft.Network/deployments",
           "name": "[concat('DeployNIC'),copyIndex(1))]",
-          "apiVersion": "[variables('apiVer')]",
+          "apiVersion": "[variables('deployApiVer')]",
           "location": "[parameters('location')]",
           "dependsOn": [],
           "copy": {
