@@ -111,7 +111,7 @@
         "subnet0Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[0].subnet)]",
         "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[1].subnet)]",
         "deployApiVer": "2015-01-01",
-        "apiVer": "2015-06-15",
+        "apiVer": "2015-02-01",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
         "publicIPSetupURI": "[concat(parameters('assetLocation'),'PublicIP/azuredeploy.json')]",
         "nsgAddRuleURI": "[concat(parameters('assetLocation'),'NetSecgGroup/add_rule/azuredeploy.json')]",
