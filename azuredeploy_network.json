@@ -33,9 +33,9 @@
         "description": "subnet names with the assigned ip address prefix"
       },
       "defaultValue": [
-        {"subnetName":"FESubnet","addressPrefix":"10.0.1.0/24"},
-        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24"},
-        {"subnetName":"SECSubnet","addressPrefix":"10.0.3.0/24"}
+        {"subnetName":"FESubnet","addressPrefix":"10.0.1.0/24","routerIPAddress":"10.0.1.11"},
+        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24","routerIPAddress":"10.0.2.11"},
+        {"subnetName":"SECSubnet","addressPrefix":"10.0.3.0/24","routerIPAddress":"10.0.3.11"}
       ]
     },
     "storageAccountType": {
@@ -94,6 +94,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "dependsOn": [],
+      "copy": {
+        "name": "iteration",
+        "count": "[parameters('vnetDefinition').subnetCount]"
+      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -104,14 +108,14 @@
           "location": {
             "value": "[variables('location')]",
           },
-          "vnetDefinition": {
-            "value": "[parameters('vnetDefinition')]"
+          "subnetName": {
+            "value": "[parameters('subnetDefinition')[copyIndex()].subnetName]"
           },
-          "subnetDefinition": {
-            "value": "[parameters('subnetDefinition')]"
+          "subnetAddressPrefix": {
+            "value": "[parameters('subnetDefinition')[copyIndex()].addressPrefix]"
           },
-          "routerIPAddresses": {
-            "value": "[parameters('routerIPAddresses')]"
+          "routerIPAddress": {
+            "value": "[parameters('subnetDefinition').[copyIndex()].routerIPAddress]"
           }
         }
       }

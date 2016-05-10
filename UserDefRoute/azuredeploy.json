@@ -8,23 +8,23 @@
           "description": "resource location"
         }
       },
-      "vnetDefinition": {
-        "type": "object",
+      "subnetName": {
+        "type": "string",
         "metadata": {
-          "description": "vnet definition array"
+          "description": "subnet name for UDR"
         }
       },
-      "subnetDefinition": {
-        "type": "array",
+      "subnetAddressPrefix": {
+        "type": "string",
         "metadata": {
-          "description": "subnet definition object"
+          "description": "subnet address prefix for UDR"
         }
       },
       "routerIPAddresses": {
-        "type": "object",
+        "type": "string",
         "metadata": {
-          "description": "router IP Address assignment"
-        }
+          "description": "router IP Address assignment for UDR"
+        },
       }
     },
     "variables": {
@@ -34,25 +34,21 @@
         {
           "apiVersion": "[variables('apiVersion')]",
           "type": "Microsoft.Network/routeTables",
-          "name": "[toLower(concat('udr',parameters('subnetDefinition')[copyIndex()].subnetName))]",
+          "name": "[toLower(concat('udr',parameters('subnetName')]",
           "location": "[parameters('location')]",
-          "copy": {
-            "name": "Iteration",
-            "count": "[parameters('vnetDefinition').subnetCount]"
-          },
           "properties": {
             "routes": [
               {
-                "name": "[concat('DefaultRoute-',parameters('subnetDefinition')[copyIndex()].subnetName)]",
+                "name": "[concat('DefaultRoute-',parameters('subnetName')]",
                 "properties": {
                   "addressPrefix": "0.0.0.0/0",
                   "nextHopType": "VirtualAppliance",
-                  "nextHopIpAddress": "[parameters('routerIPAddresses').parameters('subnetDefinition')[copyIndex()].subnetName]"
+                  "nextHopIpAddress": "[parameters('routerIPAddress')]"
                 }
               }
             ]
           }
-        },
+        }
     ],
     "outputs": {
     }
