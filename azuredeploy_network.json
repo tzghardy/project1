@@ -45,12 +45,45 @@
       },
       "defaultValue": "Standard_LRS"
     },
+    "csrConfig": {
+      "type": "object",
+      "metadata": {
+        "description": "configuration data for the Cisco CSR"
+      },
+      "defaultValue": {
+        "vmCharacteristics": {
+          "vmName": "CSR",
+          "vmSize": "Standard_D2",
+          "nicCount": 2,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.0.14", "IPAllocationMethod": "static"},
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "static"}
+          ],
+        },
+        "vmGalleryInfo": {
+          "imagePublisher": "cisco",
+          "imageOffer": "cisco-csr-1000v",
+          "imageSKU": "csr-azure-byol"
+        },
+        "publicIPInfo": {
+          "publicIPNameBase": "CSR",
+          "publicIPDNSPrefix": "abra234new",
+          "publicIPAddressType": "Dynamic"
+        },
+        "adminUsername": "csrAdministrator",
+        "adminPassword": "tempkey123!",
+        "sshPublicKey": "",
+        "authenticationType": "password"
+        }
+      }
+    }
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
     "UDRSetupURI": "[concat(parameters('assetLocation'),'UserDefRoute/azuredeploy.json')]",
     "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
     "storageSetupURI": "[concat(parameters('assetLocation'),'StorageAccount/azuredeploy.json')]",
+    "csrSetupURI": "[concat(parameters('assetLocation'),'cisco-csr-1000v/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
     "apiVersion": "2015-01-01",
   },
@@ -79,7 +112,7 @@
       }
     },
     {
-      "name": "[concat('DeployUserDefinedRoutes',copyIndex()]",
+      "name": "[concat('DeployUserDefinedRoutes',copyIndex())]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "dependsOn": [],
@@ -194,6 +227,56 @@
           },
           "storageAccountType": {
             "value": "[parameters('storageAccountType')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "Deploy Cisco CSR 1000v",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "variables('apiVersion')",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('csrSetupURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "vdcName": {
+            "value": "[parameters('vdcName')]"
+          },
+          "storageAccountName": {
+            "value": "[reference(concat('DeployStorageAccount',outputs.storageAccountNameOut.value)]"
+          },
+          "vnetDefinition": {
+            "value": "[parameters('vnetDefinition')]"
+          },
+          "vmCharacteristicis": {
+            "value": "[parameters('csrConfig').vmCharacteristics]"
+          },
+          "vmGalleryInfo": {
+            "value": "[parameters('csrConfig').vmGalleryInfo]"
+          },
+          "publicIPInformation": {
+            "value": "[parameters('csrConfig').publicIPInfo]"
+          },
+          "adminUsername": {
+            "value": "[parameters('csrConfig').adminUsername]"
+          },
+          "adminPassword": {
+            "value": "[parameters('csrConfig').adminPassword]"
+          },
+          "sshPublicKey": {
+            "value": "[parameters('csrConfig').sshPublicKey]"
+          },
+          "authenticationType": {
+            "value": "[parameters('csrConfig').authType]"
+          },
+          "assetLocation": {
+            "value": "[parameters('assetLocation')]"
           }
         }
       }
