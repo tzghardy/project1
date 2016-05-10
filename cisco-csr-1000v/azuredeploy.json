@@ -158,7 +158,7 @@
           }
         }
       ],
-      "publicIPName": "[concat('PIP-',parameters('vdcName'),parameters('publicIPInformation').publicIPNameBase)]",
+      "publicIPName": "[concat('PIP-',parameters('publicIPInformation').publicIPNameBase)]",
       "publicIPAllocationMethod": "[parameters('publicIPInformation').publicIPAllocationMethod]",
       "domainNameLabel": "[parameters('publicIPInformation').domainNameLabel]"
     },
