@@ -38,8 +38,8 @@
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.0.14","IPAllocationMethod": "static"},
-            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "static"}
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14","IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
           ]
         }
       },
@@ -61,8 +61,8 @@
         },
         "defaultValue": {
           "publicIPNameBase": "CSR",
-          "publicIPDNSPrefix": "abracisco01new",
-          "publicIPAddressType": "Dynamic"
+          "domainNameLabel": "abracisco01new",
+          "publicIPAllocationMethod": "Dynamic"
         }
       },
       "adminUsername": {
@@ -107,9 +107,9 @@
       }
     },
     "variables": {
-        "storageAccountUri": "[toLower(concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('vmName')))]",
+        "storageAccountUri": "[toLower(concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/'))]",
         "OSDiskName": "osdisk",
-        "vmStorageAccountContainerName": "[parameters('vmCharacteristics').vmName]",
+        "vmStorageAccountContainerName": "[toLower(parameters('vmCharacteristics').vmName)]",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetDefinition').vnetName)]",
         "subnet0Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[0].subnet)]",
         "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[1].subnet)]",
@@ -117,11 +117,13 @@
         "apiVer": "2015-06-15",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
         "publicIPSetupURI": "[concat(parameters('assetLocation'),'PublicIP/azuredeploy.json')]",
-        "nsgAddRuleURI": "[concat(parameters('assetLocation'),'NetSecgGroup/add_rule/azuredeploy.json')]",
-        "deployNICURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy.json')]",
+        "nsgAddRuleURI": "[concat(parameters('assetLocation'),'NetSecGroup/add_rule/azuredeploy.json')]",
+        "nsgName": "[concat('nsg',parameters('vmCharacteristics').nicInfo[0].subnet)]",
+        "deployNICURIwPIP": "[concat(parameters('assetLocation'),'NIC/azuredeploy_wpip.json')]",
+        "deployNICURIwoPIP": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopip.json')]",
         "osProfile": "[variables(concat('osprofile',parameters('authenticationType')))]",
         "osProfilesshPublicKey": {
-            "computerName": "[concat(parameters('vdcName'),parameters('vmCharacteristics').vmName]",
+            "computerName": "[parameters('vmCharacteristics').vmName]",
             "adminUsername": "[parameters('adminUsername')]",
             "linuxConfiguration": {
                 "disablePasswordAuthentication": "true",
@@ -140,10 +142,9 @@
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
         },
-        "nsgName": "[concat('nsg',parameters('vmCharacteristics')[0].subnet)]",
         "vmSecurityRules": [
           {
-          "name": "[concat(parameters('vmCharacteristics').vmName,'SSH_Allow')]",
+          "name": "[concat(parameters('vmCharacteristics').vmName,'_SSH_Allow')]",
           "properties": {
             "description": "AllowSSH",
             "protocol": "Tcp",
@@ -192,16 +193,15 @@
             }
         },
         {
-            "apiVersion": "[variables('deployApiVer')]",
-            "type": "Microsoft.Network/deployments",
-            "name": "DeployCsrNsgRuleRequirements",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                  "uri": "[variables('nsgAddRuleURI')]",
-                  "contentVersion": "1.0.0.0"
-                }
-            },
+          "apiVersion": "[variables('deployApiVer')]",
+          "type": "Microsoft.Resources/deployments",
+          "name": "DeployCsrNsgRuleRequirements",
+          "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('nsgAddRuleURI')]",
+                "contentVersion": "1.0.0.0"
+              },
             "parameters": {
               "location": {
                 "value": "[parameters('location')]"
@@ -213,18 +213,19 @@
                 "value": "[variables('vmSecurityRules')]"
               }
             }
+          }
         },
         {
-          "type": "Microsoft.Network/deployments",
+          "type": "Microsoft.Resources/deployments",
           "name": "DeployNIC0",
           "apiVersion": "[variables('deployApiVer')]",
-          "location": "[parameters('location')]",
           "dependsOn": [
-            "[resourceId('Microsoft.Resources/deployments','DeployPublicIP')]"
+            "Microsoft.Resources/deployments/DeployPublicIP"
           ],
           "properties": {
+            "mode": "Incremental",
             "templateLink": {
-              "templateUrI": "[variables('deployNICURI')]",
+              "uri": "[variables('deployNICURIwPIP')]",
               "contentVersion": "1.0.0.0"
             },
             "parameters": {
@@ -241,7 +242,7 @@
                 "value": "[parameters('vmCharacteristics').nicInfo[0].IPAllocationMethod]"
               },
               "IPAddress": {
-                "value": "[parameters('vmCharacteristcs').nicInfo[0].IPAddress]"
+                "value": "[parameters('vmCharacteristics').nicInfo[0].IPAddress]"
               },
               "publicIPID": {
                 "value": "[reference('DeployPublicIP').outputs.publicIPID.value]"
@@ -250,24 +251,24 @@
                 "value": "[parameters('vmCharacteristics').nicInfo[0].subnet]"
               },
               "enableIPForwarding": {
-                "value": true
+                "value": "true"
               }
             }
           }
         },
         {
-          "type": "Microsoft.Network/deployments",
-          "name": "[concat('DeployNIC'),copyIndex(1))]",
+          "type": "Microsoft.Resources/deployments",
+          "name": "[concat('DeployNIC',copyIndex(1))]",
           "apiVersion": "[variables('deployApiVer')]",
-          "location": "[parameters('location')]",
           "dependsOn": [],
           "copy": {
             "name": "iteration",
             "count": "[add(parameters('vmCharacteristics').nicCount,-1)]"
           },
           "properties": {
+            "mode": "Incremental",
             "templateLink": {
-              "templateUrI": "[variables('deployNICURI')]",
+              "uri": "[variables('deployNICURIwoPIP')]",
               "contentVersion": "1.0.0.0"
             },
             "parameters": {
@@ -284,16 +285,10 @@
                 "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].IPAllocationMethod]"
               },
               "IPAddress": {
-                "value": "[parameters('vmCharacteristcs').nicInfo[copyIndex(1)].IPAddress]"
-              },
-              "publicIPID": {
-                "value": ""
+                "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].IPAddress]"
               },
               "subnetName": {
                 "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].subnet]"
-              },
-              "enableIPForwarding": {
-                "value": false
               }
             }
           }
@@ -309,8 +304,8 @@
               "product": "[parameters('vmGalleryInfo').imageOffer]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/',parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]",
-                "[concat('Microsoft.Network/networkInterfaces/',parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]"
+                "Microsoft.Resources/Deployments/DeployNIC0",
+                "[concat('Microsoft.Resources/Deployments/DeployNIC',add(parameters('vmCharacteristics').nicCount,-1))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -327,7 +322,7 @@
                     "osDisk": {
                         "name": "osdisk",
                         "vhd": {
-                            "uri": "[concat(variables('storageAccountUri'), '/', variables('OSDiskName'), '.vhd')]"
+                            "uri": "[concat(variables('storageAccountUri'),variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
                         },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
@@ -339,23 +334,26 @@
                             "properties": {
                                 "primary": true
                             },
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'),'-nic0'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics).nicInfo[0].nicNameBase))]"
                         },
                         {
                             "properties": {
                                 "primary": false
                             },
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'),'-nic1'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics).nicInfo[1].nicNameBase))]"
                         }
                     ]
                 },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": "true",
-                        "storageUri": "[concat('http://', variables('storageAccount'), '.blob.core.windows.net')]"
+                        "storageUri": "[variables('storageAccountUri')]"
                     }
                 }
             }
         }
-    ]
+    ],
+    "outputs": {
+      
+    }
 }
