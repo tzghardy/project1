@@ -233,7 +233,7 @@
     {
       "name": "Deploy Cisco CSR 1000v",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "variables('apiVersion')",
+      "apiVersion": "[variables('apiVersion')]",
       "properties": {
         "mode": "incremental",
         "templateLink": {
