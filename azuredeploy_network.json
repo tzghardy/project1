@@ -33,9 +33,9 @@
         "description": "subnet names with the assigned ip address prefix"
       },
       "defaultValue": [
-        {"subnetName":"FESubnet","addressPrefix":"10.0.1.0/24","routerIPAddress":"10.0.1.11"},
-        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24","routerIPAddress":"10.0.2.11"},
-        {"subnetName":"SECSubnet","addressPrefix":"10.0.3.0/24","routerIPAddress":"10.0.3.11"}
+        {"subnetName":"fesubnet","addressPrefix":"10.0.1.0/24","routerIPAddress":"10.0.1.11"},
+        {"subnetName":"fesubnet","addressPrefix":"10.0.2.0/24","routerIPAddress":"10.0.2.11"},
+        {"subnetName":"secsubnet","addressPrefix":"10.0.3.0/24","routerIPAddress":"10.0.3.11"}
       ]
     },
     "storageAccountType": {
@@ -56,8 +56,8 @@
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.0.14", "IPAllocationMethod": "static"},
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "static"}
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "static"},
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "static"}
           ],
         },
         "vmGalleryInfo": {
