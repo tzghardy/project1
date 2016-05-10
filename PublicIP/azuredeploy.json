@@ -27,13 +27,13 @@
     "publicIPAllocationMethod": {
       "type": "string",
       "metadata": {
-        "description": "public IP Allocation Method (static or dynamic)"
+        "description": "public IP Allocation Method (Static or Dynamic)"
       },
       "allowedValues": [
-        "static",
-        "dynamic"
+        "Static",
+        "Dynamic"
       ],
-      "defaultValue": "dynamic"
+      "defaultValue": "Dynamic"
     }
   },
   "variables": {

@@ -68,7 +68,7 @@
         "publicIPInfo": {
           "publicIPNameBase": "CSR",
           "publicIPDNSPrefix": "abra234new",
-          "publicIPAddressType": "Dynamic"
+          "publicIPAllocationMethod": "Dynamic"
         },
         "adminUsername": "csrAdministrator",
         "adminPassword": "tempkey123!",

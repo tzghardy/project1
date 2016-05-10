@@ -3,17 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "location": {
-        "type": "string"
+        "type": "string",
+        "defaultValue": "eastus"
       },
       "vdcName": {
-        "type": "string"
+        "type": "string",
+        "defaultValue": "vdc2"
       },
       "storageAccountName": {
         "type": "string",
         "metadata": {
           "description": "storage account name for deployment"
         },
-        "defaultValue": ""
+        "defaultValue": "vdc2testslrs"
       },
       "vnetDefinition": {
         "type": "object",
@@ -65,7 +67,7 @@
       },
       "adminUsername": {
           "type": "string",
-          "defaultValue": "",
+          "defaultValue": "csrAdministrator",
           "metadata": {
               "description": "Username for the Virtual Machine."
           }
@@ -74,7 +76,8 @@
           "type": "securestring",
           "metadata": {
               "description": "Password for the Virtual Machine."
-          }
+          },
+          "defaultValue": "tempkey123!"
       },
       "sshPublicKey": {
           "type": "string",
@@ -100,7 +103,7 @@
               "artifactsBaseUrl": "",
               "description": "URL to acquire other templates"
           },
-          "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/"
+          "defaultValue": "https://raw.githubusercontent.com/tzghardy/project1/master/"
       }
     },
     "variables": {
