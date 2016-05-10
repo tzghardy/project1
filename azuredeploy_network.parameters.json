@@ -5,19 +5,81 @@
     "assetLocation": {
       "Value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
     },
+    "vdcName": {
+      "Value": "vdc2"
+    },
     "vnetDefinition": {
-      "Value": [
-        {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
-      ]
+      "Value": {
+        "vnetName":"testvnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":3
+      }
     },
     "subnetDefinition": {
       "Value": [
-        {"subnetName":"FESubnet","addressPrefix":"10.0.1.0/24"},
-        {"subnetName":"BESubnet","addressPrefix":"10.0.2.0/24"}
+        {"subnetName":"fesubnet","addressPrefix":"10.0.1.0/24","routerIPAddress":"10.0.1.11"},
+        {"subnetName":"fesubnet","addressPrefix":"10.0.2.0/24","routerIPAddress":"10.0.2.11"},
+        {"subnetName":"secsubnet","addressPrefix":"10.0.3.0/24","routerIPAddress":"10.0.3.11"}
       ]
     },
     "storageAccountType": {
       "Value": "Standard_LRS"
+    },
+    "csrConfig": {
+      },
+      "Value": {
+        "vmCharacteristics": {
+          "vmName": "CSR",
+          "vmSize": "Standard_D2",
+          "nicCount": 2,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
+          ],
+        },
+        "vmGalleryInfo": {
+          "imagePublisher": "cisco",
+          "imageOffer": "cisco-csr-1000v",
+          "imageSKU": "csr-azure-byol"
+        },
+        "publicIPInfo": {
+          "publicIPNameBase": "CSR",
+          "publicIPDNSPrefix": "abra234new",
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "adminUsername": "csrAdministrator",
+        "adminPassword": "tempkey123!",
+        "sshPublicKey": "",
+        "authType": "password"
+      },
+      "paloConfig": {
+        },
+        "Value": {
+          "vmCharacteristics": {
+            "vmName": "PALO",
+            "vmSize": "Standard_D3",
+            "nicCount": 3,
+            "nicInfo": [
+              {"nicNameBase": "nic0","subnet": "secsubnet","IPAddress": "10.0.3.11", "IPAllocationMethod": "Static"},
+              {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.1.11", "IPAllocationMethod": "Static"},
+              {"nicNameBase": "nic2","subnet": "besubnet","IPAddress": "10.0.2.11", "IPAllocationMethod": "Static"}
+            ],
+          },
+          "vmGalleryInfo": {
+            "imagePublisher": "paloaltonetworks",
+            "imageOffer": "vmseries1",
+            "imageSKU": "byol"
+          },
+          "publicIPInfo": {
+            "publicIPNameBase": "PALO",
+            "publicIPDNSPrefix": "abrapalo01new",
+            "publicIPAllocationMethod": "Dynamic"
+          },
+          "adminUsername": "paloAdministrator",
+          "adminPassword": "tempkey123!",
+          "sshPublicKey": "",
+          "authType": "password"
+        }
     }
   }
 }

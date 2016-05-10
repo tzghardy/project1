@@ -56,8 +56,8 @@
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "static"},
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "static"}
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
           ],
         },
         "vmGalleryInfo": {
@@ -75,7 +75,39 @@
         "sshPublicKey": "",
         "authType": "password"
       }
-    }
+    },
+    "paloConfig": {
+      "type": "object",
+      "metadata": {
+        "description": "configuration data for the Cisco CSR"
+      },
+      "defaultValue": {
+        "vmCharacteristics": {
+          "vmName": "PALO",
+          "vmSize": "Standard_D3",
+          "nicCount": 3,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "secsubnet","IPAddress": "10.0.3.14", "IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic2","subnet": "besubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
+          ],
+        },
+        "vmGalleryInfo": {
+          "imagePublisher": "paloaltonetworks",
+          "imageOffer": "vmseries1",
+          "imageSKU": "byol"
+        },
+        "publicIPInfo": {
+          "publicIPNameBase": "PALO",
+          "publicIPDNSPrefix": "abrapalo01new",
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "adminUsername": "paloAdministrator",
+        "adminPassword": "tempkey123!",
+        "sshPublicKey": "",
+        "authType": "password"
+      }
+    },
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
@@ -83,6 +115,7 @@
     "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
     "storageSetupURI": "[concat(parameters('assetLocation'),'StorageAccount/azuredeploy.json')]",
     "csrSetupURI": "[concat(parameters('assetLocation'),'cisco-csr-1000v/azuredeploy.json')]",
+    "paloSetupURI": "[concat(parameters('assetLocation'),'Palo/azuredeploy.json')]",
     "location": "[resourceGroup().location]",
     "apiVersion": "2015-01-01",
   },
@@ -273,6 +306,56 @@
           },
           "authenticationType": {
             "value": "[parameters('csrConfig').authType]"
+          },
+          "assetLocation": {
+            "value": "[parameters('assetLocation')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "DeployPalo",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion')]",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('paloSetupURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "vdcName": {
+            "value": "[parameters('vdcName')]"
+          },
+          "storageAccountName": {
+            "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
+          },
+          "vnetDefinition": {
+            "value": "[parameters('vnetDefinition')]"
+          },
+          "vmCharacteristics": {
+            "value": "[parameters('paloConfig').vmCharacteristics]"
+          },
+          "vmGalleryInfo": {
+            "value": "[parameters('paloConfig').vmGalleryInfo]"
+          },
+          "publicIPInformation": {
+            "value": "[parameters('paloConfig').publicIPInfo]"
+          },
+          "adminUsername": {
+            "value": "[parameters('paloConfig').adminUsername]"
+          },
+          "adminPassword": {
+            "value": "[parameters('paloConfig').adminPassword]"
+          },
+          "sshPublicKey": {
+            "value": "[parameters('paloConfig').sshPublicKey]"
+          },
+          "authenticationType": {
+            "value": "[parameters('paloConfig').authType]"
           },
           "assetLocation": {
             "value": "[parameters('assetLocation')]"

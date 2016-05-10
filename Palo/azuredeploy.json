@@ -34,12 +34,13 @@
           "description": "hardware and infrastructure characteristics of vm"
         },
         "defaultValue": {
-          "vmName": "CSR",
-          "vmSize": "Standard_D2",
-          "nicCount": 2,
+          "vmName": "Palo",
+          "vmSize": "Standard_D3",
+          "nicCount": 3,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14","IPAllocationMethod": "Static"},
-            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
+            {"nicNameBase": "nic0","subnet": "secsubnet","IPAddress": "10.0.3.11","IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.1.11","IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic2","subnet": "besubnet","IPAddress": "10.0.2.11","IPAllocationMethod": "Static"}
           ]
         }
       },
@@ -49,9 +50,9 @@
           "description": "Azure Marketplace Information"
         },
         "defaultValue": {
-          "imagePublisher": "cisco",
-          "imageOffer": "cisco-csr-1000v",
-          "imageSKU": "csr-azure-byol",
+          "imagePublisher": "paloaltonetworks",
+          "imageOffer": "vmseries1",
+          "imageSKU": "byol",
         }
       },
       "publicIPInformation": {
@@ -60,14 +61,14 @@
           "description": "public IP address object characteristics"
         },
         "defaultValue": {
-          "publicIPNameBase": "CSR",
-          "domainNameLabel": "abracisco01new",
+          "publicIPNameBase": "PALO",
+          "domainNameLabel": "abrapalo01new",
           "publicIPAllocationMethod": "Dynamic"
         }
       },
       "adminUsername": {
           "type": "string",
-          "defaultValue": "csrAdministrator",
+          "defaultValue": "paloAdministrator",
           "metadata": {
               "description": "Username for the Virtual Machine."
           }
@@ -113,6 +114,7 @@
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetDefinition').vnetName)]",
         "subnet0Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[0].subnet)]",
         "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[1].subnet)]",
+        "subnet2Ref": "[concat(variables('vnetID'),'/subnets/', parameters('vmCharacteristics').nicInfo[2].subnet)]",
         "deployApiVer": "2015-01-01",
         "apiVer": "2015-06-15",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
@@ -146,10 +148,10 @@
           {
           "name": "[concat(parameters('vmCharacteristics').vmName,'_SSH_Allow')]",
           "properties": {
-            "description": "AllowSSH",
+            "description": "Allow_Inbound_Palo_Setup",
             "protocol": "Tcp",
             "sourcePortRange": "*",
-            "destinationPortRange": "22",
+            "destinationPortRange": "",
             "sourceAddressPrefix": "Internet",
             "destinationAddressPrefix": "[concat(parameters('vmCharacteristics').nicInfo[0].IPAddress,'/32')]",
             "access": "Allow",
@@ -251,7 +253,7 @@
                 "value": "[parameters('vmCharacteristics').nicInfo[0].subnet]"
               },
               "enableIPForwarding": {
-                "value": "true"
+                "value": "false"
               }
             }
           }
@@ -289,6 +291,9 @@
               },
               "subnetName": {
                 "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].subnet]"
+              },
+              "enableIPForwarding": {
+                "value": "true"
               }
             }
           }
@@ -329,20 +334,26 @@
                     }
                 },
                 "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "properties": {
-                                "primary": true
-                            },
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase))]"
-                        },
-                        {
-                            "properties": {
-                                "primary": false
-                            },
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[1].nicNameBase))]"
-                        }
-                    ]
+                  "networkInterfaces": [
+                    {
+                      "properties": {
+                        "primary": true
+                      },
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase))]"
+                    },
+                    {
+                      "properties": {
+                        "primary": false
+                      },
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[1].nicNameBase))]"
+                    },
+                    {
+                      "properties": {
+                        "primary": false
+                      },
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[2].nicNameBase))]"
+                    }
+                  ]
                 },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
