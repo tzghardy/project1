@@ -37,7 +37,7 @@
     {
       "apiVersion": "[variables('apiVer')]",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('nsgName')]",
+      "name": "[parameters('nsgName')]",
       "location": "[parameters('location')]",
       "properties": {
           "mode": "Incremental",
