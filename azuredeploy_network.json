@@ -231,7 +231,7 @@
       }
     },
     {
-      "name": "Deploy Cisco CSR 1000v",
+      "name": "DeployCiscoCSR1000v",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "properties": {
@@ -253,7 +253,7 @@
           "vnetDefinition": {
             "value": "[parameters('vnetDefinition')]"
           },
-          "vmCharacteristicis": {
+          "vmCharacteristics": {
             "value": "[parameters('csrConfig').vmCharacteristics]"
           },
           "vmGalleryInfo": {
