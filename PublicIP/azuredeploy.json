@@ -56,11 +56,11 @@
   ],
   "outputs": {
     "publicIPID": {
-      "value": "[resourceId(concat('Microsoft.Network/publicIPAddresses/'),variables('PIPName'))]",
+      "value": "[resourceId(concat('Microsoft.Network/publicIPAddresses/'),parameters('publicIPName'))]",
       "type": "string"
     },
     "fqdn": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses/',variables('PIPName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses/',parameters('publicIPName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
       "type": "string"
     }
   }
