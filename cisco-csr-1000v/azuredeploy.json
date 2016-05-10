@@ -5,7 +5,7 @@
       "location": {
         "type": "string"
       },
-        "vdcName": {
+      "vdcName": {
         "type": "string"
       },
       "storageAccountName": {
@@ -284,13 +284,13 @@
                 "value": "[parameters('vmCharacteristcs').nicInfo[copyIndex(1)].IPAddress]"
               },
               "publicIPID": {
-                "value": "[reference('DeployPublicIP').outputs.publicIPID.value]"
+                "value": ""
               },
               "subnetName": {
                 "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].subnet]"
               },
               "enableIPForwarding": {
-                "value": true
+                "value": false
               }
             }
           }
