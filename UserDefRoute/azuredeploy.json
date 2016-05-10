@@ -20,7 +20,7 @@
           "description": "subnet address prefix for UDR"
         }
       },
-      "routerIPAddresses": {
+      "routerIPAddress": {
         "type": "string",
         "metadata": {
           "description": "router IP Address assignment for UDR"

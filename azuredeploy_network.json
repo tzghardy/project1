@@ -45,17 +45,6 @@
       },
       "defaultValue": "Standard_LRS"
     },
-    "routerIPAddresses": {
-      "type": "object",
-      "metadata": {
-        "description": "UDR VMAppliance Interface Information"
-      },
-      "defaultValue": {
-        "FESubnet": "10.0.1.11",
-        "BESubnet": "10.0.2.11",
-        "SECSubnet": "10.0.3.11"
-      }
-    }
   },
   "variables": {
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
@@ -90,7 +79,7 @@
       }
     },
     {
-      "name": "DeployUserDefinedRoutes",
+      "name": "[concat('DeployUserDefinedRoutes',copyIndex()]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "dependsOn": [],
@@ -115,7 +104,7 @@
             "value": "[parameters('subnetDefinition')[copyIndex()].addressPrefix]"
           },
           "routerIPAddress": {
-            "value": "[parameters('subnetDefinition').[copyIndex()].routerIPAddress]"
+            "value": "[parameters('subnetDefinition')[copyIndex()].routerIPAddress]"
           }
         }
       }
