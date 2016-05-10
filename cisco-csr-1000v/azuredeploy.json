@@ -36,8 +36,8 @@
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.0.14"},
-            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.1.14"}
+            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.0.14","IPAllocationMethod": "static"},
+            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "static"}
           ]
         }
       },
@@ -100,7 +100,7 @@
               "artifactsBaseUrl": "",
               "description": "URL to acquire other templates"
           },
-          "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/cisco-csr-1000v"
+          "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/"
       }
     },
     "variables": {
@@ -113,8 +113,9 @@
         "deployApiVer": "2015-01-01",
         "apiVer": "2015-06-15",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
-        "publicIPSetupURI": "[concat(parameters('assetLocation'),'/publicip.json')]",
+        "publicIPSetupURI": "[concat(parameters('assetLocation'),'PublicIP/azuredeploy.json')]",
         "nsgAddRuleURI": "[concat(parameters('assetLocation'),'NetSecgGroup/add_rule/azuredeploy.json')]",
+        "deployNICURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy.json')]",
         "osProfile": "[variables(concat('osprofile',parameters('authenticationType')))]",
         "osProfilesshPublicKey": {
             "computerName": "[concat(parameters('vdcName'),parameters('vmCharacteristics').vmName]",
@@ -136,6 +137,7 @@
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
         },
+        "nsgName": "[concat('nsg',parameters('vmCharacteristics')[0].subnet)]",
         "vmSecurityRules": [
           {
           "name": "[concat(parameters('vmCharacteristics').vmName,'SSH_Allow')]",
@@ -151,7 +153,10 @@
             "direction": "Inbound"
           }
         }
-      ]
+      ],
+      "publicIPName": "[concat('PIP-',parameters('vdcName'),parameters('publicIPInformation').publicIPNameBase)]",
+      "publicIPAllocationMethod": "[parameters('publicIPInformation').publicIPAllocationMethod]",
+      "domainNameLabel": "[parameters('publicIPInformation').domainNameLabel]"
     },
     "resources": [
         {
@@ -169,10 +174,16 @@
                       "value": "[parameters('vdcName')]"
                     },
                     "location": {
-                        "value": "[parameters('location')]"
+                      "value": "[parameters('location')]"
                     },
-                    "publicIPInformation": {
-                        "value": "[parameters('publicIPInformation')]"
+                    "publicIPName": {
+                      "value": "[variables('publicIPName')]"
+                    },
+                    "publicIPAllocationMethod": {
+                      "value": "[variables('publicIPAllocationMethod')]"
+                    },
+                    "domainNameLabel": {
+                      "value": "[variables('domainNameLabel')]"
                     }
                 }
             }
@@ -192,69 +203,97 @@
               "location": {
                 "value": "[parameters('location')]"
               },
+              "nsgName": {
+                "value": "[variables('nsgName')]"
+              },
               "vmSecurityRules": {
                 "value": "[variables('vmSecurityRules')]"
               }
             }
         },
         {
-            "type": "Microsoft.Network/deployments",
-            "name": "[concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]",
-            "apiVersion": "[variables('apiVer')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-              "[resourceId('Microsoft.Resources/deployments','DeployPublicIP')]"
-            ],
-            "properties": {
-              "templateLink": {
-                "templateUrI": "$deployNIC",
-                "contentVersion": "1.0.0.0"
+          "type": "Microsoft.Network/deployments",
+          "name": "DeployNIC0",
+          "apiVersion": "[variables('apiVer')]",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments','DeployPublicIP')]"
+          ],
+          "properties": {
+            "templateLink": {
+              "templateUrI": "[variables('deployNICURI')]",
+              "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+              "location": {
+                "value": "[parameters('location')]"
               },
-              "parameters": {
-                "location": {
-                  "value": "[parameters('location')]"
-                },
-                "nicName": {
-                  "value": ""
-                }
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "privateIPAddress" : "[parameters('vmCharacteristics')]",
-                            "subnet": {
-                                "id": "[variables('subnet0Ref')]"
-                            },
-                            "publicIPAddress": {
-                              "id": "[DeployPublicIP.outputs.publicIpId.value]"
-                            }
-                        }
-                    }
-                ]
+              "vnetName": {
+                "value": "[parameters('vnetDefinition').vnetName]"
+              },
+              "nicName": {
+                "value": "[concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]"
+              },
+              "IPAllocationMethod" : {
+                "value": "[parameters('vmCharacteristics').nicInfo[0].IPAllocationMethod]"
+              },
+              "IPAddress": {
+                "value": "[parameters('vmCharacteristcs').nicInfo[0].IPAddress]"
+              },
+              "publicIPID": {
+                "value": "[reference('DeployPublicIP').outputs.publicIPID.value]"
+              },
+              "subnetName": {
+                "value": "[parameters('vmCharacteristics').nicInfo[0].subnet]"
+              },
+              "enableIPForwarding": {
+                "value": true
+              }
             }
+          }
         },
         {
-            "apiVersion": "[variables('apiVer')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[0].nicNameBase)]",
-            "location": "[variables('location')]",
-            "dependsOn": [],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "privateIPAddress" : "[parameters('vmCharacteristics').nicInfo[1].IPAddress]",
-                            "subnet": {
-                                "id": "[variables('subnet1Ref')]"
-                            }
-                        }
-                    }
-                ],
-                "enableIPForwarding": true
+          "type": "Microsoft.Network/deployments",
+          "name": "[concat('DeployNIC'),copyIndex(1))]",
+          "apiVersion": "[variables('apiVer')]",
+          "location": "[parameters('location')]",
+          "dependsOn": [],
+          "copy": {
+            "name": "iteration",
+            "count": "[add(parameters('vmCharacteristics').nicCount,-1)]"
+          },
+          "properties": {
+            "templateLink": {
+              "templateUrI": "[variables('deployNICURI')]",
+              "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+              "location": {
+                "value": "[parameters('location')]"
+              },
+              "vnetName": {
+                "value": "[parameters('vnetDefinition').vnetName]"
+              },
+              "nicName": {
+                "value": "[concat(parameters('vmCharacteristics').vmName,'-',parameters('vmCharacteristics').nicInfo[copyIndex(1)].nicNameBase)]"
+              },
+              "IPAllocationMethod" : {
+                "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].IPAllocationMethod]"
+              },
+              "IPAddress": {
+                "value": "[parameters('vmCharacteristcs').nicInfo[copyIndex(1)].IPAddress]"
+              },
+              "publicIPID": {
+                "value": "[reference('DeployPublicIP').outputs.publicIPID.value]"
+              },
+              "subnetName": {
+                "value": "[parameters('vmCharacteristics').nicInfo[copyIndex(1)].subnet]"
+              },
+              "enableIPForwarding": {
+                "value": true
+              }
             }
+          }
         },
         {
             "apiVersion": "[variables('apiVer')]",

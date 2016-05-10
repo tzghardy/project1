@@ -6,22 +6,18 @@
       "type": "string",
       "defaultValue": "eastus"
     },
-    "vnetDefinition": {
+    "vnetName": {
       "type": "object",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
       },
-      "defaultValue": {
-        "vnetName":"testvnet",
-        "addressPrefix":"10.0.0.0/8",
-        "subnetCount":3
-      }
+      "defaultValue": "testvnet"
     },
     "nicName": {
       "type": "string",
       "defaultValue": "nic0"
     },
-    "IPAssignment": {
+    "IPAllocationMethod": {
       "type": "string",
       "allowedValues": [
         "Dynamic",
@@ -40,13 +36,16 @@
     "subnetName": {
       "type": "string",
       "defaultValue": "BESubnet"
+    },
+    "enableIPForwarding": {
+      "type": "boolean",
+      "defaultValue": false
     }
   },
   "variables": {
     "apiVer": "2015-06-15",
     "rgName": "[resourceGroup().name]",
-    "virtualNetworkName": "[parameters('vnetDefinition').vnetName]",
-    "VnetID": "[resourceId(variables('rgName'),'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+    "VnetID": "[resourceId(variables('rgName'),'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
     "nicSubnetRef": "[concat(variables('VnetID'),'/subnets/',parameters('subnetName'))]",
   },
   "resources": [
@@ -60,17 +59,18 @@
                 {
                     "name": "ipconfig1",
                     "properties": {
-                        "privateIPAllocationMethod": "[parameters('IPAssignment')]",
+                        "privateIPAllocationMethod": "[parameters('IPAllocationMethod')]",
                         "privateIPAddress" : "[parameters('IPAddress')]",
                         "subnet": {
-                            "id": "[parameters('nicSubnetRef')]"
+                            "id": "[variables('nicSubnetRef')]"
                         },
                         "publicIPAddress": {
                           "id": "[parameters('publicIPID')]"
                         }
                     }
                 }
-            ]
+            ],
+            "enableIPForwarding": "[parameters('enableIPForwarding')]"
         }
     },
   ],

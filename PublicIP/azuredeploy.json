@@ -10,22 +10,36 @@
       "type": "string",
       "defaultValue": "VDC2"
     },
-    "publicIPInformation": {
-      "type": "object",
+    "publicIPName": {
+      "type": "string",
       "metadata": {
-        "description": "public IP address object characteristics"
+        "description": "public IP address name"
       },
-      "defaultValue": {
-        "publicIPNameBase": "nameBase",
-        "publicIPDNSPrefix": "abrac234",
-        "publicIPAddressType": "Dynamic"
-      }
+      "defaultValue": "PIP-vdc2name"
+    },
+    "domainNameLabel": {
+      "type": "string",
+      "metadata": {
+        "description": "dns prefix"
+      },
+      "defaultValue": "abrac234"
+    },
+    "publicIPAllocationMethod": {
+      "type": "string",
+      "metadata": {
+        "description": "public IP Allocation Method (static or dynamic)"
+      },
+      "allowedValues": [
+        "static",
+        "dynamic"
+      ],
+      "defaultValue": "dynamic"
     }
   },
   "variables": {
     "apiVer": "2015-06-15",
     "rgName": "[resourceGroup().name]",
-    "PIPName": "[concat('PIP-',parameters('vdcName'),parameters('publicIPInformation').publicIPNameBase)]"
+    "PIPName": "[concat('PIP-',parameters('vdcName'),parameters('publicIPName'))]"
   },
   "resources": [
     {
@@ -34,15 +48,15 @@
       "name": "[variables('PIPName')]",
       "location": "[parameters('location')]",
       "properties": {
-        "publicIPAllocationMethod": "[parameters('publicIPInformation').publicIPAddressType]",
+        "publicIPAllocationMethod": "[parameters('publicIPAllocationMethod')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('publicIPInformation').publicIPDNSPrefix]"
+          "domainNameLabel": "[parameters('domainNameLabel')]"
         }
       }
     }
   ],
   "outputs": {
-    "publicIpId": {
+    "publicIPID": {
       "value": "[resourceId(concat('Microsoft.Network/publicIPAddresses/'),variables('PIPName'))]",
       "type": "string"
     },
