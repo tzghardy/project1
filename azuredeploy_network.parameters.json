@@ -44,7 +44,7 @@
         },
         "publicIPInfo": {
           "publicIPNameBase": "CSR",
-          "publicIPDNSPrefix": "abra234new",
+          "domainNameLabel": "abracisco01new",
           "publicIPAllocationMethod": "Dynamic"
         },
         "adminUsername": "csrAdministrator",
@@ -56,7 +56,7 @@
         },
         "Value": {
           "vmCharacteristics": {
-            "vmName": "PALO",
+            "vmName": "palo",
             "vmSize": "Standard_D3",
             "nicCount": 3,
             "nicInfo": [
@@ -72,7 +72,7 @@
           },
           "publicIPInfo": {
             "publicIPNameBase": "PALO",
-            "publicIPDNSPrefix": "abrapalo01new",
+            "domainNameLabel": "abrapalo01new",
             "publicIPAllocationMethod": "Dynamic"
           },
           "adminUsername": "paloAdministrator",
