@@ -31,7 +31,7 @@
           "name": "[toLower(concat('nsg',parameters('subnetDefinition')[copyIndex()].subnetName))]",
           "location": "[parameters('location')]",
           "copy": {
-            "name": "NSGRulesCopy",
+            "name": "Iteration",
             "count": "[parameters('vnetDefinition').subnetCount]"
           },
           "properties": {
