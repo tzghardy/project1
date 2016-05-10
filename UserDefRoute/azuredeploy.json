@@ -39,7 +39,7 @@
           "properties": {
             "routes": [
               {
-                "name": "[concat('DefaultRoute-',parameters('subnetName')]",
+                "name": "[concat('DefaultRoute-',parameters('subnetName'))]",
                 "properties": {
                   "addressPrefix": "0.0.0.0/0",
                   "nextHopType": "VirtualAppliance",
