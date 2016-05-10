@@ -38,8 +38,8 @@
       "defaultValue": "BESubnet"
     },
     "enableIPForwarding": {
-      "type": "boolean",
-      "defaultValue": false
+      "type": "string",
+      "defaultValue": "false"
     }
   },
   "variables": {
