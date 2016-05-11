@@ -245,7 +245,7 @@
                 "value": "[parameters('vmCharacteristics').nicInfo[0].IPAddress]"
               },
               "publicIPID": {
-                "value": "[reference('DeployPublicIP').outputs.publicIPID.value]"
+                "value": "[reference('DeployCiscoPublicIP').outputs.publicIPID.value]"
               },
               "subnetName": {
                 "value": "[parameters('vmCharacteristics').nicInfo[0].subnet]"
