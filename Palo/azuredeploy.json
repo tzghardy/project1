@@ -166,7 +166,7 @@
     },
     "resources": [
         {
-            "name": "DeployPublicIP",
+            "name": "DeployPaloPublicIP",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('deployApiVer')]",
             "properties": {
@@ -197,7 +197,7 @@
         {
           "apiVersion": "[variables('deployApiVer')]",
           "type": "Microsoft.Resources/deployments",
-          "name": "DeployCsrNsgRuleRequirements",
+          "name": "DeployPaloCsrNsgRuleRequirements",
           "properties": {
               "mode": "Incremental",
               "templateLink": {
@@ -219,7 +219,7 @@
         },
         {
           "type": "Microsoft.Resources/deployments",
-          "name": "DeployNIC0",
+          "name": "DeployPaloNIC0",
           "apiVersion": "[variables('deployApiVer')]",
           "dependsOn": [
             "Microsoft.Resources/deployments/DeployPublicIP"
@@ -260,7 +260,7 @@
         },
         {
           "type": "Microsoft.Resources/deployments",
-          "name": "[concat('DeployNIC',copyIndex(1))]",
+          "name": "[concat('DeployPaloNIC',copyIndex(1))]",
           "apiVersion": "[variables('deployApiVer')]",
           "dependsOn": [],
           "copy": {
