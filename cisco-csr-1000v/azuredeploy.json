@@ -220,7 +220,7 @@
           "name": "DeployCiscoNIC0",
           "apiVersion": "[variables('deployApiVer')]",
           "dependsOn": [
-            "Microsoft.Resources/deployments/DeployPublicIP"
+            "Microsoft.Resources/deployments/DeployCiscoPublicIP"
           ],
           "properties": {
             "mode": "Incremental",
