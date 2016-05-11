@@ -160,7 +160,7 @@
           }
         }
       ],
-      "publicIPName": "[concat('PIP-',parameters('publicIPInformation').publicIPNameBase)]",
+      "publicIPName": "[concat('pip',parameters('publicIPInformation').publicIPNameBase)]",
       "publicIPAllocationMethod": "[parameters('publicIPInformation').publicIPAllocationMethod]",
       "domainNameLabel": "[parameters('publicIPInformation').domainNameLabel]"
     },

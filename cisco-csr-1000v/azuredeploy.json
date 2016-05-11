@@ -34,7 +34,7 @@
           "description": "hardware and infrastructure characteristics of vm"
         },
         "defaultValue": {
-          "vmName": "CSR",
+          "vmName": "csr",
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
@@ -60,7 +60,7 @@
           "description": "public IP address object characteristics"
         },
         "defaultValue": {
-          "publicIPNameBase": "CSR",
+          "publicIPNameBase": "csr",
           "domainNameLabel": "abracisco01new",
           "publicIPAllocationMethod": "Dynamic"
         }
@@ -158,7 +158,7 @@
           }
         }
       ],
-      "publicIPName": "[concat('PIP-',parameters('publicIPInformation').publicIPNameBase)]",
+      "publicIPName": "[concat('pip',parameters('publicIPInformation').publicIPNameBase)]",
       "publicIPAllocationMethod": "[parameters('publicIPInformation').publicIPAllocationMethod]",
       "domainNameLabel": "[parameters('publicIPInformation').domainNameLabel]"
     },
