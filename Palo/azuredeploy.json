@@ -151,7 +151,7 @@
             "description": "Allow_Inbound_Palo_Setup",
             "protocol": "Tcp",
             "sourcePortRange": "*",
-            "destinationPortRange": "",
+            "destinationPortRange": "*",
             "sourceAddressPrefix": "Internet",
             "destinationAddressPrefix": "[concat(parameters('vmCharacteristics').nicInfo[0].IPAddress,'/32')]",
             "access": "Allow",

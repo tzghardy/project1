@@ -146,7 +146,7 @@
           {
           "name": "[concat(parameters('vmCharacteristics').vmName,'_SSH_Allow')]",
           "properties": {
-            "description": "AllowSSH",
+            "description": "Allow_SSH",
             "protocol": "Tcp",
             "sourcePortRange": "*",
             "destinationPortRange": "22",
