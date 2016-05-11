@@ -309,8 +309,8 @@
               "product": "[parameters('vmGalleryInfo').imageOffer]"
             },
             "dependsOn": [
-                "Microsoft.Resources/Deployments/DeployNIC0",
-                "[concat('Microsoft.Resources/Deployments/DeployNIC',add(parameters('vmCharacteristics').nicCount,-1))]"
+                "Microsoft.Resources/Deployments/DeployPaloNIC0",
+                "[concat('Microsoft.Resources/Deployments/DeployPaloNIC',add(parameters('vmCharacteristics').nicCount,-1))]"
             ],
             "properties": {
                 "hardwareProfile": {
