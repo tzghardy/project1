@@ -46,9 +46,5 @@
     }
   ],
   "outputs": {
-    "nsgAddRule": {
-      "type": "string",
-      "value": "[variables('nsgEndpoint')]"
-    }
   }
 }

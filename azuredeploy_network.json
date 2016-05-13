@@ -52,7 +52,7 @@
       },
       "defaultValue": {
         "vmCharacteristics": {
-          "vmName": "CSR",
+          "vmName": "csr",
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
@@ -66,7 +66,7 @@
           "imageSKU": "csr-azure-byol"
         },
         "publicIPInfo": {
-          "publicIPNameBase": "CSR",
+          "publicIPNameBase": "csr",
           "domainNameLabel": "abracisco01new",
           "publicIPAllocationMethod": "Dynamic"
         },
@@ -98,7 +98,7 @@
           "imageSKU": "byol"
         },
         "publicIPInfo": {
-          "publicIPNameBase": "PALO",
+          "publicIPNameBase": "palo",
           "domainNameLabel": "abrapalo01new",
           "publicIPAllocationMethod": "Dynamic"
         },
