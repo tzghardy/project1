@@ -313,7 +313,9 @@
       "type": "Microsoft.Resources/deployments",
       "name": "[concat('Update',variables('vmNicName'))]",
       "apiVersion": "[variables('deployApiVersion')]",
-      "dependsOn": [],
+      "dependsOn": [
+        "[Microsoft.Compute/virtualMachines/extensions,(concat(parameters('vmName'),parameters('vmExtention'))]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
