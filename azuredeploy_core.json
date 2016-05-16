@@ -333,7 +333,7 @@
             "value": "[parameters('bdcConfig').vmCharacteristics.nicInfo[0].IPAllocationMethod]"
           },
           "dnsServerAddresses": {
-            "value": ["parameters('pdcConfig').vmCharacteristics.nicInfo[0].IPAddress"]
+            "value": "[parameters('pdcConfig').vmCharacteristics.nicInfo[0].IPAddress)]"
           },
         }
       }
