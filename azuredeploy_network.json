@@ -110,6 +110,7 @@
     },
   },
   "variables": {
+    "networkResourceGroupName": "[resourceGroup().name]",
     "NSGSetupURI": "[concat(parameters('assetLocation'),'NetSecGroup/azuredeploy.json')]",
     "UDRSetupURI": "[concat(parameters('assetLocation'),'UserDefRoute/azuredeploy.json')]",
     "VNETSetupURI": "[concat(parameters('assetLocation'),'VNET/azuredeploy.json')]",
@@ -277,6 +278,9 @@
           "location": {
             "value": "[variables('location')]"
           },
+          "networkResourceGroupName": {
+            "value": "[variables('networkResourceGroupName')]"
+          },
           "vdcName": {
             "value": "[parameters('vdcName')]"
           },
@@ -330,6 +334,9 @@
           "vdcName": {
             "value": "[parameters('vdcName')]"
           },
+          "networkResourceGroupName": {
+            "value": "[variables('networkResourceGroupName')]"
+          },          
           "storageAccountName": {
             "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
           },

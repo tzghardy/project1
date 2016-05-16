@@ -2,17 +2,33 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters":
-    {
-    "VDCName": {
+  {
+    "location": {
+      "type": "string",
+    },
+    "vdcName": {
       "type": "string",
       "defaultValue": "NoVDCName"
     },
-    "storageType": {
+    "networkResourceGroupName": {
       "type": "string",
       "metadata": {
-        "description": "Type of storage to build storage account name in variables section"
+        "description": "resource group containint virtual network",
       },
-      "defaultValue": "LRS"
+      "defaultValue": "vdc2testnetwork"
+    },
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "virtual network name"
+      }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "storage ccount name to deploy vm to"
+      },
+      "defaultValue": "vdc2testcoreslrs"
     },
     "subnetName": {
       "type": "string",
@@ -26,7 +42,20 @@
       "metadata": {
         "description": "The IP address of the new VM"
       },
-      "defaultValue": "10.0.0.4"
+    "defaultValue": "10.0.0.4"
+    },
+    "IPAllocatinMethod": {
+      "type": "string",
+      "metadata": {
+        "description": "Static or Dynamic IP Allocation"
+      }
+    },
+    "vmNicNameBase": {
+      "type": "string",
+      "metadata": {
+        "description": "NIC Name Base to create NIC Name"
+      },
+      "defaultValue": "nic0"
     },
     "vmName": {
       "type": "string",
@@ -34,6 +63,12 @@
         "description": "The computer name of the VM"
       },
       "defaultValue": "adPDC"
+    },
+    "vmFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "VM Function - PDC calls default NIC creation template, BDC calls NIC template with DNS server"
+      }
     },
     "adminUsername": {
       "type": "string",
@@ -114,49 +149,71 @@
       "metadata": {
         "description": "Microsoft VM Extension"
       }
+    },
+    "dnsServerAddresses": {
+      "type": "array",
+      "metadata": {
+        "description": "DNS Server Addresses"
+      }
     }
   },
-
   "variables": {
+    "deployApiVersion": "2015-01-01",
+    "apiVersion": "2015-05-01-preview",
     "rgName": "[resourceGroup().name]",
-    "location": "[resourceGroup().location]",
-    "virtualNetworkResourceGroup": "[toLower(concat('rg',parameters('VDCName'),'network'))]",
-    "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
-    "storageAccountName": "[toLower(variables('rgName'),parameters('storageType'))]",
-    "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
-    "vmSubnetName": "[toLower(concat(parameters('VDCName'),parameters('subnetName')))]",
-    "vmNicName": "[concat(parameters('vmName'),'-nic0')]",
-    "VnetID": "[resourceId(variables('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "vmSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('vmSubnetName'))]",
+    "ADassetLocation": "[concat(parameters('assetLocation'),'AD_NewDomain/']",
+    "vmNicName": "[concat(parameters('vmName'),'-',parameters('vmNICNameBase'))]",
+    "VnetID": "[resourceId(parameters('networkResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+    "vmSubnetRef": "[concat(variables('VnetID'),'/subnets/',parameters('subnetName'))]",
     "vmNicId": "[resourceId('Microsoft.Network/networkInterfaces',variables('vmNicName'))]",
-    "IPConfigID": "[concat(variables('vmNicId'),'/ipConfigurations/ipconfig1')]",
     "vmOSDisk": "[concat(parameters('vmName'),'-osdisk')]",
     "vmDataDisk": "[concat(parameters('vmName'),'-datadisk-01')]",
     "vmDataDiskSize": "1000",
-    "nicTemplateUri": "[concat(parameters('assetLocation'),'nic.json')]",
-    "dscModulesURL": "[concat(parameters('assetLocation'),parameters('dscModuleURLfile'))]",
+    "PDC": "",
+    "BDC": "wdns",
+    "nicTemplateURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopip',variables(parameters('vmFunction')),'.json')]",
+    "nicUpdateDNSURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopipwdns.json')]",
+    "dscModulesURI": "[concat(parameters('ADassetLocation'),parameters('dscModuleURLfile'))]",
     "storagePath": "[toLower(concat('http://',variables('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]"
   },
   "resources": [
     {
-      "name": "[variables('vmNicName')]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "location": "[variables('location')]",
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat('Deploy',variables('vmNicName'))]",
+      "apiVersion": "[variables('deployApiVersion')]",
       "dependsOn": [],
-      "apiVersion": "2015-05-01-preview",
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[parameters('vmIPAddress')]",
-              "subnet": {
-                "id": "[variables('vmSubnetRef')]"
-              }
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('nicTemplateURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkResourceGroupName": {
+            "value": "[parameters('networkResourceGroupName')]"
+          },
+          "vnetName": {
+            "value": "[parameters('vnetName')]"
+          },
+          "nicName": {
+            "value": "[variables('vmNicName')]"
+          },
+          "IPAllocationMethod" : {
+            "value": "[parameters('IPAllocationMethod')]"
+          },
+          "IPAddress": {
+            "value": "[parameters('vmIPAddress')]"
+          },
+          "subnetName": {
+            "value": "[parameters('subnetName')]"
+          },
+          "dnsServerAddresses": {
+            "value": "[paramaters('dnsServerAddresses')]"
           }
-        ]
+        }
       }
     },
     {
@@ -165,7 +222,7 @@
       "name": "[parameters('vmName')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/',variables('vmNicName'))]",
+        "[concat('Microsoft.Resources/Deployments/Deploy',variables('vmNicName'))]",
       ],
       "properties": {
         "hardwareProfile": {
@@ -249,5 +306,44 @@
         }
       ]
     },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat('Update',variables('vmNicName'))]",
+      "apiVersion": "[variables('deployApiVersion')]",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('nicUpdateDNSURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkResourceGroupName": {
+            "value": "[parameters('networkResourceGroupName')]"
+          },
+          "vnetName": {
+            "value": "[parameters('vnetName')]"
+          },
+          "nicName": {
+            "value": "[variables('vmNicName')]"
+          },
+          "IPAllocationMethod" : {
+            "value": "[parameters('IPAllocationMethod')]"
+          },
+          "IPAddress": {
+            "value": "[parameters('vmIPAddress')]"
+          },
+          "subnetName": {
+            "value": "[parameters('subnetName')]"
+          },
+          "dnsServerAddresses": {
+            "value": ["parameters('dnsServerAddresses')","parameters('vmIPAddress')"]
+          }
+        }
+      }
+    }
   ]
 }

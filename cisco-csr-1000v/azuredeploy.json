@@ -10,6 +10,12 @@
         "type": "string",
         "defaultValue": "vdc2"
       },
+      "networkResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "resource group containing virtual network"
+        }
+      },
       "storageAccountName": {
         "type": "string",
         "metadata": {
@@ -232,6 +238,9 @@
               "location": {
                 "value": "[parameters('location')]"
               },
+              "networkResourceGroupName": {
+                "value": "[parameters('networkResourceGroupName')]"
+              },
               "vnetName": {
                 "value": "[parameters('vnetDefinition').vnetName]"
               },
@@ -274,6 +283,9 @@
             "parameters": {
               "location": {
                 "value": "[parameters('location')]"
+              },
+              "networkResourceGroupName": {
+                "value": "[parameters('networkResourceGroupName')]"
               },
               "vnetName": {
                 "value": "[parameters('vnetDefinition').vnetName]"

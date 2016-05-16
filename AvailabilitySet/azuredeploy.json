@@ -7,17 +7,29 @@
       "metadata": {
         "description": "availability set name"
       }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "location to deploy to"
+      }
     }
   },
   "variables": {
-    "location": "[resourceGroup().location]"
+    "apiVersion": "2015-05-01-preview"
   },
   "resources": [
     {
     "name": "[parameters('availabilitySetName')]",
     "type": "Microsoft.Compute/availabilitySets",
-    "apiVersion": "2015-05-01-preview",
-    "location": "[variables('location')]"
+    "apiVersion": "[variables('apiVersion')]",
+    "location": "[parameters('location')]"
     }
-  ]
+  ],
+  "outputs": {
+    "availabilitySetOut": {
+      "type": "string",
+      "Value": "[parameters('availabilitySetName')]"
+    }
+  }
 }

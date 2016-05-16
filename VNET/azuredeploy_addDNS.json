@@ -10,11 +10,13 @@
          "defaultValue": "eastus"
        },
        "vnetDefinition": {
-         "type": "array",
+         "type": "object",
          "metadata": {
            "description": "definition for the virtual network"
          },
-         "defaultValue": ["testvnet","10.0.0.0/8",2]
+         "defaultValue": {
+           "vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":3
+         }
        },
        "subnets": {
          "type": "array",
@@ -30,38 +32,45 @@
        "subnetToAddAddressPrefix": {
          "type": "string",
          "metadata": "subnet to add Address Prefix"
-       },
-       "dnsServerAddresses": {
-         "type": "array",
-         "metadata": {
-           "description": "The DNS servers that will be used for this vnet, port 53 traffic will need to cross subnet boundaries"
-         },
-         "defaultValue": ["10.0.0.1","10.0.0.2"]
        }
     },
     "variables": {
       "apiVersion": "2015-06-15",
+      "subnetNew": [
+        {
+          "name": "[parameters('subnetToAddName')]",
+          "properties": {
+            "addressPrefix": "[parameters('subnetToAddAddressPrefix')]",
+            "networkSecurityGroup": {
+              "id": "[resourceId('Microsoft.Networks/networkSecurityGroups',concat('nsg',parameters('subnetToAddName')))]"
+            },
+            "tags": {
+              "DisplayName": "[parameters('subnetToAddName')]"
+            }
+          }
+        }
+      ]
     },
     "resources": [
       {
-        "name": "[parameters('vnetDefinition')[0]]",
+        "name": "[parameters('vnetDefinition').vnetName]",
         "type": "Microsoft.Network/virtualNetworks",
         "location": "[parameters('location')]",
         "apiVersion": "[variables('apiVersion')]",
         "dependsOn": [],
         "tags": {
-            "displayName": "[parameters('vnetDefinition')[0]]",
+            "displayName": "[parameters('vnetDefinition').vnetName]",
             "location": "[parameters('location')]"
         },
         "properties": {
           "addressSpace": {
               "addressPrefixes": [
-                "[parameters('vnetDefinition')[1]]"
+                "[parameters('vnetDefinition').addressPrefix]"
               ]
           },
-          "subnets": "[parameters('subnets')]",
+          "subnets": "[concat(parameters('subnets'),variables('subnetNew'))]",
           "dhcpOptions": {
-            "DNSServers": "[parameters('dnsServerAddresses')]"
+            "DNSServers": ""
           }
         }
       }
@@ -69,11 +78,11 @@
     "outputs": {
       "vnetSubnets": {
         "type": "array",
-        "value": "[reference(parameters('vnetDefinition')[0]).subnets]"
+        "value": "[reference(parameters('vnetDefinition').vnetName).subnets]"
       },
       "vnetLength": {
         "type": "int",
-        "value": "[length(reference(parameters('vnetDefinition')[0]).subnets)]"
+        "value": "[length(reference(parameters('vnetDefinition').vnetName).subnets)]"
       },
     }
 }

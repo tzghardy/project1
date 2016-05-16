@@ -45,7 +45,7 @@
     },
     "dnsServerAddresses": {
       "type": "array",
-      "defaultValue": [],
+      "defaultValue": ["10.0.2.21"]
     }
   },
   "variables": {
@@ -72,7 +72,10 @@
                     }
                 }
             ],
-            "enableIPForwarding": "[parameters('enableIPForwarding')]"
+            "enableIPForwarding": "[parameters('enableIPForwarding')]",
+            "dnsSettings": {
+              "dnsServers": "[parameters('dnsServerAddresses')]"
+            }
         }
     },
   ],
