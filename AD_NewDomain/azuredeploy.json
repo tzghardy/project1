@@ -151,9 +151,9 @@
       }
     },
     "dnsServerAddresses": {
-      "type": "array",
+      "type": "string",
       "metadata": {
-        "description": "DNS Server Addresses"
+        "description": "DNS Server Addresses, for this template, type comes is as a string"
       }
     }
   },
@@ -174,7 +174,8 @@
     "nicTemplateURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopip',variables(parameters('vmFunction')),'.json')]",
     "nicUpdateDNSURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopipwdns.json')]",
     "dscModulesURI": "[concat(variables('ADassetLocation'),parameters('dscModuleURLfile'))]",
-    "storagePath": "[toLower(concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]"
+    "storagePath": "[toLower(concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]",
+    "addDNSServerAddresses": "[parameters('dnsServerAddresses'),parameters('vmIPAddress')]"
   },
   "resources": [
     {
@@ -340,7 +341,7 @@
             "value": "[parameters('subnetName')]"
           },
           "dnsServerAddresses": {
-            "value": "[concat(parameters('dnsServerAddresses'),parameters('vmIPAddress'))]"
+            "value": "[variables('addDNSServerAddresses')]"
           }
         }
       }
