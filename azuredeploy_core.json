@@ -24,13 +24,15 @@
       "defaultValue": "vdc4network"
     },
     "vnetDefinition": {
-      "type": "array",
+      "type": "object",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
       },
-      "defaultValue": [
-        {"vnetName":"testvnet","addressPrefix":"10.0.0.0/8","subnetCount":2}
-      ]
+      "defaultValue": {
+        "vnetName":"testvnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":2
+      }
     },
     "storageAccountType": {
       "type": "string",
@@ -182,7 +184,7 @@
             "value": "[parameters('networkResourceGroupName')]"
           },
           "vnetName": {
-            "value": "[parameters('vnetName')]"
+            "value": "[parameters('vnetDefinition').vnetName]"
           },
           "storageAccountName":{
             "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
@@ -230,13 +232,13 @@
             "value": "[parameters('assetLocation')]"
           },
           "dscModuleURLfile": {
-            "value": "[parameters('pdcConfig').dscInfo.imagePublisher]"
+            "value": "[parameters('pdcConfig').dscInfo.dscModuleURLfile]"
           },
           "dscConfigurationFunction": {
-            "value": "[parameters('pdcConfig').dscInfo.imagePublisher]"
+            "value": "[parameters('pdcConfig').dscInfo.dscConfigurationFunction]"
           },
           "vmExtention": {
-            "value": "[parameters('pdcConfig').dscInfo.imagePublisher]"
+            "value": "[parameters('pdcConfig').dscInfo.vmExtention]"
           },
           "IPAllocationMethod": {
             "value": "[parameters('pdcConfig').vmCharacteristics.nicInfo[0].IPAllocationMethod]"
@@ -271,7 +273,7 @@
             "value": "[parameters('networkResourceGroupName')]"
           },
           "vnetName": {
-            "value": "[parameters('vnetName')]"
+            "value": "[parameters('vnetDefinition').vnetName]"
           },
           "storageAccountName":{
             "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
@@ -319,13 +321,13 @@
             "value": "[parameters('assetLocation')]"
           },
           "dscModuleURLfile": {
-            "value": "[parameters('bdcConfig').dscInfo.imagePublisher]"
+            "value": "[parameters('bdcConfig').dscInfo.dscModuleURLfile]"
           },
           "dscConfigurationFunction": {
-            "value": "[parameters('bdcConfig').dscInfo.imagePublisher]"
+            "value": "[parameters('bdcConfig').dscInfo.dscConfigurationFunction]"
           },
           "vmExtention": {
-            "value": "[parameters('bdcConfig').dscInfo.imagePublisher]"
+            "value": "[parameters('bdcConfig').dscInfo.vmExtention]"
           },
           "IPAllocationMethod": {
             "value": "[parameters('bdcConfig').vmCharacteristics.nicInfo[0].IPAllocationMethod]"
