@@ -26,7 +26,7 @@
     "storageAccountName": {
       "type": "string",
       "metadata": {
-        "description": "storage ccount name to deploy vm to"
+        "description": "storage account name to deploy vm to"
       },
       "defaultValue": "vdc2testcoreslrs"
     },
