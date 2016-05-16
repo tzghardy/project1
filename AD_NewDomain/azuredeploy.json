@@ -161,7 +161,7 @@
     "deployApiVersion": "2015-01-01",
     "apiVersion": "2015-05-01-preview",
     "rgName": "[resourceGroup().name]",
-    "ADassetLocation": "[concat(parameters('assetLocation'),'AD_NewDomain/']",
+    "ADassetLocation": "[concat(parameters('assetLocation'),'AD_NewDomain/')]",
     "vmNicName": "[concat(parameters('vmName'),'-',parameters('vmNICNameBase'))]",
     "VnetID": "[resourceId(parameters('networkResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
     "vmSubnetRef": "[concat(variables('VnetID'),'/subnets/',parameters('subnetName'))]",
@@ -287,7 +287,7 @@
             "typeHandlerVersion": "2.11",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "ModulesUrl": "[variables('dscModulesURL')]",
+              "ModulesUrl": "[variables('dscModulesURI')]",
               "ConfigurationFunction": "[parameters('dscConfigurationFunction')]",
               "Properties": {
                 "DomainName": "[parameters('domainName')]",
