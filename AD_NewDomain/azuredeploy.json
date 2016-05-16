@@ -150,6 +150,12 @@
         "description": "Microsoft VM Extension"
       }
     },
+    "IPAllocationMethod": {
+      "type": "string",
+      "metadata": {
+        "description": "IP Allocation Method (Static or Dynamic)"
+      }
+    },
     "dnsServerAddresses": {
       "type": "array",
       "metadata": {
