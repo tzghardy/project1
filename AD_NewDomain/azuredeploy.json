@@ -340,7 +340,7 @@
             "value": "[parameters('subnetName')]"
           },
           "dnsServerAddresses": {
-            "value": ["parameters('dnsServerAddresses')","parameters('vmIPAddress')"]
+            "value": "[concat(parameters('dnsServerAddresses'),parameters('vmIPAddress'))]"
           }
         }
       }
