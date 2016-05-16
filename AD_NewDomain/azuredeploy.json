@@ -44,7 +44,7 @@
       },
     "defaultValue": "10.0.0.4"
     },
-    "IPAllocatinMethod": {
+    "IPAllocationMethod": {
       "type": "string",
       "metadata": {
         "description": "Static or Dynamic IP Allocation"
@@ -148,12 +148,6 @@
       "type": "string",
       "metadata": {
         "description": "Microsoft VM Extension"
-      }
-    },
-    "IPAllocationMethod": {
-      "type": "string",
-      "metadata": {
-        "description": "IP Allocation Method (Static or Dynamic)"
       }
     },
     "dnsServerAddresses": {
