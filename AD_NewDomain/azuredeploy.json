@@ -176,7 +176,8 @@
     "dscModulesURI": "[concat(variables('ADassetLocation'),parameters('dscModuleURLfile'))]",
     "storagePath": "[toLower(concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]",
     "addDNSServerAddresses": "[split(parameters('dnsServerAddresses'),',')]",
-    "updateDNSServerAddresses": "[split(concat(parameters('dnsServerAddresses'),',',parameters('vmIPAddress')),',')]"
+    "DNSServerstring": "[concat(parameters('dnsServerAddresses'),',',parameters('vmIPAddress'))]",
+    "updateDNSServerAddresses": "[split(variables('DNSServerstring'),',')]"
   },
   "resources": [
     {
