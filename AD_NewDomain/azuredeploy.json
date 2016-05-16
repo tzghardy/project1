@@ -211,7 +211,7 @@
             "value": "[parameters('subnetName')]"
           },
           "dnsServerAddresses": {
-            "value": "[paramaters('dnsServerAddresses')]"
+            "value": "[parameters('dnsServerAddresses')]"
           }
         }
       }
