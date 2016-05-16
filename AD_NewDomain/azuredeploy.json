@@ -173,7 +173,7 @@
     "BDC": "wdns",
     "nicTemplateURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopip',variables(parameters('vmFunction')),'.json')]",
     "nicUpdateDNSURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopipwdns.json')]",
-    "dscModulesURI": "[concat(parameters('ADassetLocation'),parameters('dscModuleURLfile'))]",
+    "dscModulesURI": "[concat(variables('ADassetLocation'),parameters('dscModuleURLfile'))]",
     "storagePath": "[toLower(concat('http://',variables('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]"
   },
   "resources": [
