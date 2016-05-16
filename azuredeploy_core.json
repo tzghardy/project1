@@ -21,7 +21,7 @@
       "metadata": {
         "description": "resource group that contains the vnet for the vdc"
       },
-      "defaultValue": "vdc2test"
+      "defaultValue": "vdc4network"
     },
     "vnetDefinition": {
       "type": "array",
@@ -58,7 +58,7 @@
           "vmFunction": "PDC",
           "nicCount": 1,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "besubnet","IPAdress": "10.0.2.21","IPAllocationMethod": "Static"}
+            {"nicNameBase": "nic0","subnet": "besubnet","IPAddress": "10.0.2.21","IPAllocationMethod": "Static"}
           ],
         },
         "vmGalleryInfo": {
@@ -88,7 +88,7 @@
           "vmFunction": "BDC",
           "nicCount": 1,
           "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "besubnet","IPAdress": "10.0.2.22","IPAllocationMethod": "Static"}
+            {"nicNameBase": "nic0","subnet": "besubnet","IPAddress": "10.0.2.22","IPAllocationMethod": "Static"}
           ],
         },
         "vmGalleryInfo": {
@@ -117,36 +117,6 @@
     "apiVersion": "2015-01-01",
   },
   "resources": [
-    {
-      "name": "DeployVnetCalltoGetSubnets",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion')]",
-      "dependsOn": [],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-            "uri": "[variables('VNETSetupURI')]",
-            "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "vnetDefinition": {
-            "value": "[parameters('vnetDefinition')]"
-          },
-          "subnets": {
-            "value": []
-          },
-          "SubnetToAddName": {
-            "value": ""
-          },
-          "SubnetToAddAddressPrefix": {
-            "value": ""
-          }
-        }
-      }
-    },
     {
       "name": "DeployAvailabilitySet",
       "type": "Microsoft.Resources/deployments",
@@ -228,6 +198,9 @@
           },
           "vmName": {
             "value": "[parameters('pdcConfig').vmCharacteristics.vmName]"
+          },
+          "vmFunction": {
+            "value": "[parameters('pdcConfig').vmCharacteristics.vmFunction]"
           },
           "adminUsername": {
             "value": "[parameters('pdcConfig').adminUsername]"
