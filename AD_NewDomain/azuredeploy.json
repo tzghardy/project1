@@ -175,7 +175,8 @@
     "nicUpdateDNSURI": "[concat(parameters('assetLocation'),'NIC/azuredeploy_nopipwdns.json')]",
     "dscModulesURI": "[concat(variables('ADassetLocation'),parameters('dscModuleURLfile'))]",
     "storagePath": "[toLower(concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]",
-    "addDNSServerAddresses": "[split(concat(parameters('dnsServerAddresses'),',',parameters('vmIPAddress')),',')]"
+    "addDNSServerAddresses": "[split(parameters('dnsServerAddresses'),',')]",
+    "updateDNSServerAddresses": "[split(concat(parameters('dnsServerAddresses'),',',parameters('vmIPAddress')))]"
   },
   "resources": [
     {
@@ -341,7 +342,7 @@
             "value": "[parameters('subnetName')]"
           },
           "dnsServerAddresses": {
-            "value": "[variables('addDNSServerAddresses')]"
+            "value": "[variables('updateDNSServerAddresses')]"
           }
         }
       }
