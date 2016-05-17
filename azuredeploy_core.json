@@ -252,53 +252,11 @@
       }
     },
     {
-      "type": "Microsoft.Resources/deployments",
-      "name": "[concat('Update',variables('nicNamePDC'))]",
-      "apiVersion": "[variables('deployApiVersion')]",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/DeployPDC"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('nicUpdateDNSURI')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "networkResourceGroupName": {
-            "value": "[parameters('networkResourceGroupName')]"
-          },
-          "vnetName": {
-            "value": "[parameters('vnetDefinition').vnetName]"
-          },
-          "nicName": {
-            "value": "[variables('nicNamePDC')]"
-          },
-          "IPAllocationMethod" : {
-            "value": "[parameters('pdcConfig').vmCharacteristics.nicInfo[0].IPAllocationMethod]"
-          },
-          "IPAddress": {
-            "value": "[parameters('pdcConfig').vmCharacteristics.nicInfo[0].IPAddress]"
-          },
-          "subnetName": {
-            "value": "[parameters('pdcConfig').vmCharacteristics.nicInfo[0].subnet]"
-          },
-          "dnsServerAddresses": {
-            "value": "[split(parameters('pdcConfig').vmCharacteristics.nicInfo[0].IPAddress,',')]"
-          }
-        }
-      }
-    },
-    {
       "name": "DeployBDC",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion')]",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DeployPDC",
-        "[concat('Microsoft.Resources/deployments/','Update',variables('nicNamePDC')]"
+        "Microsoft.Resources/deployments/DeployPDC"
       ],
       "properties": {
         "mode": "incremental",
