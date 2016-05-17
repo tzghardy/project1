@@ -278,7 +278,7 @@
       "resources": [
         {
           "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat(parameters('vmName'),parameters('vmExtention'))]",
+          "name": "[parameters('vmExtention')]",
           "apiVersion": "2015-05-01-preview",
           "location": "[parameters('location')]",
           "dependsOn": [
@@ -314,7 +314,7 @@
       "name": "[concat('Update',variables('vmNicName'))]",
       "apiVersion": "[variables('deployApiVersion')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions/',parameters('vmName'),parameters('vmExtention'))]"
+        "[concat('Microsoft.Compute/virtualMachines/extensions/',parameters('vmExtention'))]"
       ],
       "properties": {
         "mode": "Incremental",
