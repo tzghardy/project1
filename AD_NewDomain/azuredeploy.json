@@ -314,7 +314,7 @@
       "name": "[concat('Update',variables('vmNicName'))]",
       "apiVersion": "[variables('deployApiVersion')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions/',parameters('vmExtention'))]"
+        "[concat('Microsoft.Compute/virtualMachines/extensions',parameters('vmExtention'))]"
       ],
       "properties": {
         "mode": "Incremental",
