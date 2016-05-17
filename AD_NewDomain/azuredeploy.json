@@ -309,46 +309,5 @@
         }
       ]
     },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "[concat('Update',variables('vmNicName'))]",
-      "apiVersion": "[variables('deployApiVersion')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions',parameters('vmExtention'))]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('nicUpdateDNSURI')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "networkResourceGroupName": {
-            "value": "[parameters('networkResourceGroupName')]"
-          },
-          "vnetName": {
-            "value": "[parameters('vnetName')]"
-          },
-          "nicName": {
-            "value": "[variables('vmNicName')]"
-          },
-          "IPAllocationMethod" : {
-            "value": "[parameters('IPAllocationMethod')]"
-          },
-          "IPAddress": {
-            "value": "[parameters('vmIPAddress')]"
-          },
-          "subnetName": {
-            "value": "[parameters('subnetName')]"
-          },
-          "dnsServerAddresses": {
-            "value": "[variables('updateDNSServerAddresses')]"
-          }
-        }
-      }
-    }
   ]
 }
