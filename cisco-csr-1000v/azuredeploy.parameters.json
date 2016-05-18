@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "Value": "eastus"
+    },
+    "vdcName": {
+      "Value": "vdc0"
+    },
+    "networkResourceGroupName": {
+      "Value": "vdc0network"
+    },
+    "storageAccountName": {
+      "Value": "vdc0networkslrs"
+    },
+    "vnetDefinition": {
+      "Value": {
+        "vnetName":"vdc0vnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":3
+      }
+    },
+    "vmCharacteristics": {
+      "Value": {
+        "vmName": "csr",
+        "vmSize": "Standard_D2",
+        "nicCount": 2,
+        "nicInfo": [
+          {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14","IPAllocationMethod": "Static"},
+          {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
+        ]
+      }
+    },
+    "vmGalleryInfo": {
+      "Value": {
+        "imagePublisher": "cisco",
+        "imageOffer": "cisco-csr-1000v",
+        "imageSKU": "csr-azure-byol",
+      }
+    },
+    "publicIPInformation": {
+      "Value": {
+        "publicIPNameBase": "csr",
+        "domainNameLabel": "abracisco01new",
+        "publicIPAllocationMethod": "Dynamic"
+      }
+    },
+    "adminUsername": {
+        "Value": "csrAdministrator",
+    },
+    "adminPassword": {
+        "Value": "tempkey123!"
+    },
+    "sshPublicKey": {
+        "Value": "",
+    },
+    "authenticationType": {
+        "Value": "password",
+    },
+    "assetLocation": {
+        "Value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "Value": "eastus"
+    },
+    "vnetDefinition": {
+      "Value": {
+        "vnetName":"testvnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":3
+      }
+    },
+    "subnetDefinition": {
+      "Value": [
+        {"subnetName":"fesubnet","addressPrefix":"10.0.1.0/24","routerIPAddress":"10.0.1.11"},
+        {"subnetName":"besubnet","addressPrefix":"10.0.2.0/24","routerIPAddress":"10.0.2.11"},
+        {"subnetName":"secsubnet","addressPrefix":"10.0.3.0/24","routerIPAddress":"10.0.3.11"}
+      ]
+    }
+  }
+}

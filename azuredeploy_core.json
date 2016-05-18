@@ -19,94 +19,38 @@
       "type": "string",
       "metadata": {
         "description": "resource group that contains the vnet for the vdc"
-      },
-      "defaultValue": "vdc4network"
+      }
     },
     "vnetDefinition": {
       "type": "object",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
-      },
-      "defaultValue": {
-        "vnetName":"testvnet",
-        "addressPrefix":"10.0.0.0/8",
-        "subnetCount":2
       }
     },
     "storageAccountType": {
       "type": "string",
       "metadata": {
         "description": "storage account type"
-      },
-      "defaultValue": "Standard_LRS"
+      }
     },
     "availabilitySetName": {
       "type": "string",
       "metadata": {
         "description": "availability set name"
-      },
-      "defaultValue": "adAvailabilitySet"
+      }
     },
     "pdcConfig": {
       "type": "object",
       "metadata": {
         "description": "build information for pdc"
-      },
-      "defaultValue": {
-        "vmCharacteristics": {
-          "vmName": "adPDC",
-          "vmSize": "Standard_D2",
-          "vmFunction": "PDC",
-          "nicCount": 1,
-          "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "besubnet","IPAddress": "10.0.2.21","IPAllocationMethod": "Static"}
-          ],
-        },
-        "vmGalleryInfo": {
-          "imagePublisher": "MicrosoftWindowsServer",
-          "imageOffer": "WindowsServer",
-          "imageSKU": "2012-R2-Datacenter"
-        },
-        "adminUsername": "azAdministrator",
-        "adminPassword": "tempkey123!",
-        "domainName": "domain.local",
-        "dscInfo": {
-          "dscModuleURLfile": "CreateADPDC.ps1.zip",
-          "dscConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
-          "vmExtention": "/CreateADForest"
-        }
       }
     },
     "bdcConfig": {
       "type": "object",
       "metadata": {
         "description": "build information for bdc"
-      },
-      "defaultValue": {
-        "vmCharacteristics": {
-          "vmName": "adBDC",
-          "vmSize": "Standard_D2",
-          "vmFunction": "BDC",
-          "nicCount": 1,
-          "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "besubnet","IPAddress": "10.0.2.22","IPAllocationMethod": "Static"}
-          ],
-        },
-        "vmGalleryInfo": {
-          "imagePublisher": "MicrosoftWindowsServer",
-          "imageOffer": "WindowsServer",
-          "imageSKU": "2012-R2-Datacenter"
-        },
-        "adminUsername": "azAdministrator",
-        "adminPassword": "tempkey123!",
-        "domainName": "domain.local",
-        "dscInfo": {
-          "dscModuleURLfile": "CreateADBDC.ps1.zip",
-          "dscConfigurationFunction": "CreateADBDC.ps1\\CreateADBDC",
-          "vmExtention": "/CreateBDC"
-        }
       }
-    },
+    }
   },
   "variables": {
     "AVsetupURI": "[concat(parameters('assetLocation'),'AvailabilitySet/azuredeploy.json')]",

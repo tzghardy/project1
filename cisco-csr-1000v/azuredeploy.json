@@ -4,11 +4,9 @@
     "parameters": {
       "location": {
         "type": "string",
-        "defaultValue": "eastus"
       },
       "vdcName": {
         "type": "string",
-        "defaultValue": "vdc2"
       },
       "networkResourceGroupName": {
         "type": "string",
@@ -20,96 +18,66 @@
         "type": "string",
         "metadata": {
           "description": "storage account name for deployment"
-        },
-        "defaultValue": "vdc2testslrs"
+        }
       },
       "vnetDefinition": {
         "type": "object",
         "metadata": {
           "description": "vnet definition with name, addressprefix and number of subnets"
-        },
-        "defaultValue": {
-          "vnetName":"testvnet",
-          "addressPrefix":"10.0.0.0/8",
-          "subnetCount":3
         }
       },
       "vmCharacteristics": {
         "type": "object",
         "metadata": {
           "description": "hardware and infrastructure characteristics of vm"
-        },
-        "defaultValue": {
-          "vmName": "csr",
-          "vmSize": "Standard_D2",
-          "nicCount": 2,
-          "nicInfo": [
-            {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14","IPAllocationMethod": "Static"},
-            {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
-          ]
         }
       },
       "vmGalleryInfo": {
         "type": "object",
         "metadata": {
           "description": "Azure Marketplace Information"
-        },
-        "defaultValue": {
-          "imagePublisher": "cisco",
-          "imageOffer": "cisco-csr-1000v",
-          "imageSKU": "csr-azure-byol",
         }
       },
       "publicIPInformation": {
         "type": "object",
         "metadata": {
           "description": "public IP address object characteristics"
-        },
-        "defaultValue": {
-          "publicIPNameBase": "csr",
-          "domainNameLabel": "abracisco01new",
-          "publicIPAllocationMethod": "Dynamic"
         }
       },
       "adminUsername": {
-          "type": "string",
-          "defaultValue": "csrAdministrator",
-          "metadata": {
-              "description": "Username for the Virtual Machine."
-          }
+        "type": "string",
+        "metadata": {
+            "description": "Username for the Virtual Machine."
+        }
       },
       "adminPassword": {
-          "type": "securestring",
-          "metadata": {
-              "description": "Password for the Virtual Machine."
-          },
-          "defaultValue": "tempkey123!"
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        }
       },
       "sshPublicKey": {
-          "type": "string",
-          "defaultValue": "",
-          "metadata": {
-              "description": "SSH Key for the virtual machines"
-          }
+        "type": "string",
+        "metadata": {
+            "description": "SSH Key for the virtual machines"
+        }
       },
       "authenticationType": {
-          "type": "string",
-          "defaultValue": "password",
-          "allowedValues": [
-              "password",
-              "sshPublicKey"
-          ],
-          "metadata": {
-              "description": "Authentication Type to chose for the Virtual Machines"
-          }
+        "type": "string",
+        "allowedValues": [
+          "password",
+          "sshPublicKey"
+        ],
+        "metadata": {
+          "description": "Authentication Type to chose for the Virtual Machines"
+        }
       },
       "assetLocation": {
-          "type": "string",
-          "metadata": {
-              "artifactsBaseUrl": "",
-              "description": "URL to acquire other templates"
-          },
-          "defaultValue": "https://raw.githubusercontent.com/tzghardy/project1/master/"
+        "type": "string",
+        "metadata": {
+          "artifactsBaseUrl": "",
+          "description": "URL to acquire other templates"
+        }
       }
     },
     "variables": {
