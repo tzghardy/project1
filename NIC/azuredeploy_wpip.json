@@ -3,8 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "type": "string",
-      "defaultValue": "eastus"
+      "type": "string"
     },
     "networkResourceGroupName": {
       "type": "string",
@@ -16,32 +15,26 @@
       "type": "string",
       "metadata": {
         "description": "vnet definition with name, addressprefix and number of subnets"
-      },
-      "defaultValue": "testvnet"
+      }
     },
     "nicName": {
-      "type": "string",
-      "defaultValue": "nic0"
+      "type": "string"
     },
     "IPAllocationMethod": {
       "type": "string",
       "allowedValues": [
         "Dynamic",
         "Static"
-      ],
-      "defaultValue": "Dynamic"
+      ]
     },
     "IPAddress": {
-      "type": "string",
-      "defaultValue": "10.0.1.25"
+      "type": "string"
     },
     "publicIPID": {
-      "type": "string",
-      "defaultValue": "abrac234"
+      "type": "string"
     },
     "subnetName": {
-      "type": "string",
-      "defaultValue": "BESubnet"
+      "type": "string"
     },
     "enableIPForwarding": {
       "type": "string",

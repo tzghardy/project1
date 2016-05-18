@@ -3,26 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "type": "string",
-      "defaultValue": "eastus"
+      "type": "string"
     },
     "vdcName": {
-      "type": "string",
-      "defaultValue": "VDC2"
+      "type": "string"
     },
     "publicIPName": {
       "type": "string",
       "metadata": {
         "description": "public IP address name"
-      },
-      "defaultValue": "PIP-vdc2name"
+      }
     },
     "domainNameLabel": {
       "type": "string",
       "metadata": {
         "description": "dns prefix"
-      },
-      "defaultValue": "abrac234"
+      }
     },
     "publicIPAllocationMethod": {
       "type": "string",
@@ -32,8 +28,7 @@
       "allowedValues": [
         "Static",
         "Dynamic"
-      ],
-      "defaultValue": "Dynamic"
+      ]
     }
   },
   "variables": {

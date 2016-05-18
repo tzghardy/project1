@@ -39,7 +39,7 @@
           "imageSKU": "csr-azure-byol"
         },
         "publicIPInfo": {
-          "publicIPNameBase": "e0CSR",
+          "publicIPNameBase": "e0csr",
           "domainNameLabel": "e0amfwcsr01",
           "publicIPAllocationMethod": "Static"
         },
