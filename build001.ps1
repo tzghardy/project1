@@ -34,7 +34,7 @@ $dnsexist = "false"
     build may be changed on some of the simpler deployments to mimic this
     #>
 
-$VDCName = "e0vdc1"
+$VDCName = "changeme"
 $coreRG = $VDCName+"core"
 $networkRG = $VDCName+"network"
 $location = "East US"
@@ -43,7 +43,7 @@ $networkTemplate = $deployURL+"azuredeploy_network.json"
 $coreTemplate = $deployURL+"azuredeploy_core.json"
 $networkParameters = "azuredeploy_network.parameters.json"
 $coreParameters = "azuredeploy_core.parameters.json"
-$vnetName = "e0vnet"
+$vnetName = "change"
 $dns1 = "10.0.2.21"
 $dns2 = "10.0.2.22"
 

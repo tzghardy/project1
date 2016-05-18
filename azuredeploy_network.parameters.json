@@ -7,7 +7,7 @@
     },
     "vnetDefinition": {
       "value": {
-        "vnetName":"e0vnet",
+        "vnetName":"changeme",
         "addressPrefix":"10.0.0.0/8",
         "subnetCount":3
       }
@@ -25,7 +25,7 @@
     "csrConfig": {
       "value": {
         "vmCharacteristics": {
-          "vmName": "e0CSR",
+          "vmName": "changeme",
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
@@ -39,8 +39,8 @@
           "imageSKU": "csr-azure-byol"
         },
         "publicIPInfo": {
-          "publicIPNameBase": "e0csr",
-          "domainNameLabel": "e0amfwcsr01",
+          "publicIPNameBase": "changeme",
+          "domainNameLabel": "changeme",
           "publicIPAllocationMethod": "Static"
         },
         "adminUsername": "csrAdministrator",
@@ -52,7 +52,7 @@
     "paloConfig": {
       "value": {
         "vmCharacteristics": {
-          "vmName": "e0palo",
+          "vmName": "changeme",
           "vmSize": "Standard_D3",
           "nicCount": 3,
           "nicInfo": [
@@ -67,8 +67,8 @@
           "imageSKU": "byol"
         },
         "publicIPInfo": {
-          "publicIPNameBase": "e0palo",
-          "domainNameLabel": "e0amfwpalo01",
+          "publicIPNameBase": "changeme",
+          "domainNameLabel": "changeme",
           "publicIPAllocationMethod": "Dynamic"
         },
         "adminUsername": "paloAdministrator",

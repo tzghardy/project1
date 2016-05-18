@@ -7,7 +7,7 @@
     },
     "vnetDefinition": {
       "Value": {
-        "vnetName":"e0vnet",
+        "vnetName":"changeme",
         "addressPrefix":"10.0.0.0/8",
         "subnetCount":3
       }
@@ -21,7 +21,7 @@
     "pdcConfig": {
       "Value": {
         "vmCharacteristics": {
-          "vmName": "e0PDC",
+          "vmName": "changeme",
           "vmSize": "Standard_D2",
           "vmFunction": "PDC",
           "nicCount": 1,
@@ -47,7 +47,7 @@
     "bdcConfig": {
       "Value": {
         "vmCharacteristics": {
-          "vmName": "e0BDC",
+          "vmName": "changeme",
           "vmSize": "Standard_D2",
           "vmFunction": "BDC",
           "nicCount": 1,
