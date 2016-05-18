@@ -31,7 +31,7 @@
           "nicInfo": [
             {"nicNameBase": "nic0","subnet": "fesubnet","IPAddress": "10.0.1.14", "IPAllocationMethod": "Static"},
             {"nicNameBase": "nic1","subnet": "besubnet","IPAddress": "10.0.2.14", "IPAllocationMethod": "Static"}
-          ],
+          ]
         },
         "vmGalleryInfo": {
           "imagePublisher": "cisco",
@@ -59,7 +59,7 @@
             {"nicNameBase": "nic0","subnet": "secsubnet","IPAddress": "10.0.3.11", "IPAllocationMethod": "Static"},
             {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.1.11", "IPAllocationMethod": "Static"},
             {"nicNameBase": "nic2","subnet": "besubnet","IPAddress": "10.0.2.11", "IPAllocationMethod": "Static"}
-          ],
+          ]
         },
         "vmGalleryInfo": {
           "imagePublisher": "paloaltonetworks",
