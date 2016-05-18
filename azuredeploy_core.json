@@ -13,8 +13,7 @@
       "type": "string",
       "metadata": {
         "description": "vdcname to construct other variables"
-      },
-      "defaultValue": "vdc2"
+      }
     },
     "networkResourceGroupName": {
       "type": "string",
