@@ -38,7 +38,8 @@
       "defaultValue": "false"
     },
     "dnsServerAddresses": {
-      "type": "array"
+      "type": "array",
+      "defaultValue": []
     }
   },
   "variables": {

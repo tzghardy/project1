@@ -1,6 +1,7 @@
 <#
 
 Phase2 of Azure Automation, time to simplify and move forward
+download build001.ps1, azuredeploy_core.parameters.json and azuredeploy_network.parameters.json and modify for deployments
 
 >add-azurermaccount
 >login-azurermaccount
@@ -40,8 +41,8 @@ $location = "East US"
 $deployURL = "https://raw.githubusercontent.com/tzghardy/project1/master/"
 $networkTemplate = $deployURL+"azuredeploy_network.json"
 $coreTemplate = $deployURL+"azuredeploy_core.json"
-$networkParameters = $deployURL+"azuredeploy_network.parameters.json"
-$coreParameters = $deployURL+"azuredeploy_core.parameters.json"
+$networkParameters = "azuredeploy_network.parameters.json"
+$coreParameters = "azuredeploy_core.parameters.json"
 $vnetName = "e0vnet"
 $dns1 = "10.0.2.21"
 $dns2 = "10.0.2.22"
