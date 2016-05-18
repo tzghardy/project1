@@ -54,12 +54,13 @@ New-AzureRmResourceGroup -Name $networkRG -Location $location
 #date
 New-AzureRmResourceGroupDeployment -Name "DeployNetwork" -resourceGroupName $networkRG -templatefile $networkTemplate -templateParameterFile $networkParameters -vdcName $VDCName
 
-New-AzureRmResourceGroupDeployment -Name "DeployCore" -resourceGroupName $coreRG -templatefile $coreTemplate -templateParameterFile $coreParameters -vdcName $VDCName -networkResourceGroupName $networkRG 
+New-AzureRmResourceGroupDeployment -Name "DeployCore" -resourceGroupName $coreRG -templatefile $coreTemplate -templateParameterFile $coreParameters -vdcName $VDCName -networkResourceGroupName $networkRG
 
+<# fix dns for vdc
 $vnet = Get-AzureRmVirtualNetwork -resourceGroupName $networkRG -name $vnetName
 $vnet.DhcpOptions.DnsServers = $dns1
 $vnet.DhcpOptions.DnsServers += $dns2
 Set-AzureRmVirtualNetwork -VirtualNetwork $vnetName
-
+#>
 #there is currently no automation around deploying csr config or palo configuration
 #UDR is not assigned to subnets since there currently is no palo config to validate against, UDR assignemnt will be done with powershell, not JSON (easier)
