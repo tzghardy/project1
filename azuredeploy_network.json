@@ -6,7 +6,8 @@
       "type": "string",
       "metadata": {
         "description": "location of json deployment assets"
-      }
+      },
+      "defaultValue": ""
     },
     "vdcName": {
       "type": "string",
