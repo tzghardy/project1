@@ -6,24 +6,24 @@
       "value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
     },
     "vnetDefinition": {
-      "Value": {
+      "value": {
         "vnetName":"e0vnet",
         "addressPrefix":"10.0.0.0/8",
         "subnetCount":3
       }
     },
     "subnetDefinition": {
-      "Value": [
+      "value": [
         {"subnetName":"fesubnet","addressPrefix":"10.0.1.0/24","routerIPAddress":"10.0.1.11"},
         {"subnetName":"besubnet","addressPrefix":"10.0.2.0/24","routerIPAddress":"10.0.2.11"},
         {"subnetName":"secsubnet","addressPrefix":"10.0.3.0/24","routerIPAddress":"10.0.3.11"}
       ]
     },
     "storageAccountType": {
-      "Value": "Standard_LRS"
+      "value": "Standard_LRS"
     },
     "csrConfig": {
-      "Value": {
+      "value": {
         "vmCharacteristics": {
           "vmName": "e0CSR",
           "vmSize": "Standard_D2",
@@ -50,7 +50,7 @@
       }
     },
     "paloConfig": {
-      "Value": {
+      "value": {
         "vmCharacteristics": {
           "vmName": "e0palo",
           "vmSize": "Standard_D3",
