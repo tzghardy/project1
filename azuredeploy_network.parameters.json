@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "assetLocation": {
-      "Value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
+      "value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
     },
     "vnetDefinition": {
       "Value": {
