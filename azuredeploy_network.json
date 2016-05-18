@@ -13,8 +13,7 @@
       "type": "string",
       "metadata": {
         "description": "vdcname to construct other variables"
-      },
-      "defaultValue": "vdc2"
+      }
     },
     "vnetDefinition": {
       "type": "object",
@@ -336,7 +335,7 @@
           },
           "networkResourceGroupName": {
             "value": "[variables('networkResourceGroupName')]"
-          },          
+          },
           "storageAccountName": {
             "value": "[reference('DeployStorageAccount').outputs.storageAccountNameOut.value]"
           },
