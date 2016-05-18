@@ -36,7 +36,7 @@
         },
         "adminUsername": "azAdministrator",
         "adminPassword": "tempkey123!",
-        "domainName": "e0amfw.com",
+        "domainName": "domain.local",
         "dscInfo": {
           "dscModuleURLfile": "CreateADPDC.ps1.zip",
           "dscConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
@@ -62,7 +62,7 @@
         },
         "adminUsername": "azAdministrator",
         "adminPassword": "tempkey123!",
-        "domainName": "e0amfw.com",
+        "domainName": "domain.local",
         "dscInfo": {
           "dscModuleURLfile": "CreateADBDC.ps1.zip",
           "dscConfigurationFunction": "CreateADBDC.ps1\\CreateADBDC",
