@@ -33,14 +33,16 @@ $dnsexist = "false"
     build may be changed on some of the simpler deployments to mimic this
     #>
 
-$VDCName = "vdc5"
+$VDCName = "e0vdc1"
 $coreRG = $VDCName+"core"
 $networkRG = $VDCName+"network"
 $location = "East US"
 $deployURL = "https://raw.githubusercontent.com/tzghardy/project1/master/"
 $networkTemplate = $deployURL+"azuredeploy_network.json"
 $coreTemplate = $deployURL+"azuredeploy_core.json"
-$vnetName = "testvnet"
+$networkParameters = $deployURL+"azuredeploy_network.parameters.json"
+$coreParameters = $deployURL+"azuredeploy_core.parameters.json"
+$vnetName = "e0vnet"
 $dns1 = "10.0.2.21"
 $dns2 = "10.0.2.22"
 
@@ -50,11 +52,14 @@ New-AzureRmResourceGroup -Name $coreRG -Location $location
 New-AzureRmResourceGroup -Name $networkRG -Location $location
 
 #date
-New-AzureRmResourceGroupDeployment -Name "DeployNetwork" -resourceGroupName $networkRG -templatefile $networkTemplate
+New-AzureRmResourceGroupDeployment -Name "DeployNetwork" -resourceGroupName $networkRG -templatefile $networkTemplate -templateParameterFile $networkParameters -vdcName $VDCName
 
-New-AzureRmResourceGroupDeployment -Name "DeployCore" -resourceGroupName $coreRG -templatefile $coreTemplate
+New-AzureRmResourceGroupDeployment -Name "DeployCore" -resourceGroupName $coreRG -templatefile $coreTemplate -templateParameterFile $coreParameters -vdcName $VDCName -networkResourceGroupName $networkRG 
 
 $vnet = Get-AzureRmVirtualNetwork -resourceGroupName $networkRG -name $vnetName
 $vnet.DhcpOptions.DnsServers = $dns1
 $vnet.DhcpOptions.DnsServers += $dns2
 Set-AzureRmVirtualNetwork -VirtualNetwork $vnetName
+
+#there is currently no automation around deploying csr config or palo configuration
+#UDR is not assigned to subnets since there currently is no palo config to validate against, UDR assignemnt will be done with powershell, not JSON (easier)

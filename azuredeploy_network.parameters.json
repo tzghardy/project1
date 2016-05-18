@@ -5,12 +5,9 @@
     "assetLocation": {
       "Value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
     },
-    "vdcName": {
-      "Value": "vdc2"
-    },
     "vnetDefinition": {
       "Value": {
-        "vnetName":"testvnet",
+        "vnetName":"e0vnet",
         "addressPrefix":"10.0.0.0/8",
         "subnetCount":3
       }
@@ -26,10 +23,9 @@
       "Value": "Standard_LRS"
     },
     "csrConfig": {
-      },
       "Value": {
         "vmCharacteristics": {
-          "vmName": "CSR",
+          "vmName": "e0CSR",
           "vmSize": "Standard_D2",
           "nicCount": 2,
           "nicInfo": [
@@ -43,43 +39,43 @@
           "imageSKU": "csr-azure-byol"
         },
         "publicIPInfo": {
-          "publicIPNameBase": "CSR",
-          "domainNameLabel": "abracisco01new",
-          "publicIPAllocationMethod": "Dynamic"
+          "publicIPNameBase": "e0CSR",
+          "domainNameLabel": "e0amfwcsr01",
+          "publicIPAllocationMethod": "Static"
         },
         "adminUsername": "csrAdministrator",
         "adminPassword": "tempkey123!",
         "sshPublicKey": "",
         "authType": "password"
-      },
-      "paloConfig": {
+      }
+    },
+    "paloConfig": {
+      "Value": {
+        "vmCharacteristics": {
+          "vmName": "e0palo",
+          "vmSize": "Standard_D3",
+          "nicCount": 3,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "secsubnet","IPAddress": "10.0.3.11", "IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.1.11", "IPAllocationMethod": "Static"},
+            {"nicNameBase": "nic2","subnet": "besubnet","IPAddress": "10.0.2.11", "IPAllocationMethod": "Static"}
+          ],
         },
-        "Value": {
-          "vmCharacteristics": {
-            "vmName": "palo",
-            "vmSize": "Standard_D3",
-            "nicCount": 3,
-            "nicInfo": [
-              {"nicNameBase": "nic0","subnet": "secsubnet","IPAddress": "10.0.3.11", "IPAllocationMethod": "Static"},
-              {"nicNameBase": "nic1","subnet": "fesubnet","IPAddress": "10.0.1.11", "IPAllocationMethod": "Static"},
-              {"nicNameBase": "nic2","subnet": "besubnet","IPAddress": "10.0.2.11", "IPAllocationMethod": "Static"}
-            ],
-          },
-          "vmGalleryInfo": {
-            "imagePublisher": "paloaltonetworks",
-            "imageOffer": "vmseries1",
-            "imageSKU": "byol"
-          },
-          "publicIPInfo": {
-            "publicIPNameBase": "PALO",
-            "domainNameLabel": "abrapalo01new",
-            "publicIPAllocationMethod": "Dynamic"
-          },
-          "adminUsername": "paloAdministrator",
-          "adminPassword": "tempkey123!",
-          "sshPublicKey": "",
-          "authType": "password"
-        }
+        "vmGalleryInfo": {
+          "imagePublisher": "paloaltonetworks",
+          "imageOffer": "vmseries1",
+          "imageSKU": "byol"
+        },
+        "publicIPInfo": {
+          "publicIPNameBase": "e0palo",
+          "domainNameLabel": "e0amfwpalo01",
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "adminUsername": "paloAdministrator",
+        "adminPassword": "tempkey123!",
+        "sshPublicKey": "",
+        "authType": "password"
+      }
     }
   }
 }

@@ -1,0 +1,74 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "assetLocation": {
+      "Value": "https://raw.githubusercontent.com/tzghardy/project1/master/"
+    },
+    "vnetDefinition": {
+      "Value": {
+        "vnetName":"e0vnet",
+        "addressPrefix":"10.0.0.0/8",
+        "subnetCount":3
+      }
+    },
+    "storageAccountType": {
+      "Value": "Standard_LRS"
+    },
+    "availabilitySetName": {
+      "Value": "adAvailabilitySet"
+    },
+    "pdcConfig": {
+      "Value": {
+        "vmCharacteristics": {
+          "vmName": "e0PDC",
+          "vmSize": "Standard_D2",
+          "vmFunction": "PDC",
+          "nicCount": 1,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "besubnet","IPAddress": "10.0.2.21","IPAllocationMethod": "Static"}
+          ],
+        },
+        "vmGalleryInfo": {
+          "imagePublisher": "MicrosoftWindowsServer",
+          "imageOffer": "WindowsServer",
+          "imageSKU": "2012-R2-Datacenter"
+        },
+        "adminUsername": "azAdministrator",
+        "adminPassword": "tempkey123!",
+        "domainName": "e0amfw.com",
+        "dscInfo": {
+          "dscModuleURLfile": "CreateADPDC.ps1.zip",
+          "dscConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+          "vmExtention": "/CreateADForest"
+        }
+      }
+    },
+    "bdcConfig": {
+      "Value": {
+        "vmCharacteristics": {
+          "vmName": "e0BDC",
+          "vmSize": "Standard_D2",
+          "vmFunction": "BDC",
+          "nicCount": 1,
+          "nicInfo": [
+            {"nicNameBase": "nic0","subnet": "besubnet","IPAddress": "10.0.2.22","IPAllocationMethod": "Static"}
+          ],
+        },
+        "vmGalleryInfo": {
+          "imagePublisher": "MicrosoftWindowsServer",
+          "imageOffer": "WindowsServer",
+          "imageSKU": "2012-R2-Datacenter"
+        },
+        "adminUsername": "azAdministrator",
+        "adminPassword": "tempkey123!",
+        "domainName": "e0amfw.com",
+        "dscInfo": {
+          "dscModuleURLfile": "CreateADBDC.ps1.zip",
+          "dscConfigurationFunction": "CreateADBDC.ps1\\CreateADBDC",
+          "vmExtention": "/CreateBDC"
+        }
+      }
+    }
+  }
+}
